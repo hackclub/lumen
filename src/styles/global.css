@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+@font-face {
+	font-family: "Minecraft";
+	src: url("/fonts/Minecraft.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Minecraftia";
+	src: url("/fonts/Minecraftia.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+body {
+	background: black;
+	font-family: "Minecraft", monospace;
+}
+
+.hero-title-wrap {
+	display: flex;
+	justify-content: center;
+	margin-top: 16px;
+}
+
+.title-letter-wrap {
+	--bob-delay: calc(var(--i) * -0.08s);
+	display: inline-flex;
+	margin: 0 1px;
+	animation: title-bob 2.5s steps(1) var(--bob-delay) infinite;
+	animation-play-state: paused;
+}
+
+@keyframes title-bob {
+	0%,
+	100% {
+		translate: 0 0;
+	}
+	12.5% {
+		translate: 0 -1px;
+	}
+	25% {
+		translate: 0 -2px;
+	}
+	37.5% {
+		translate: 0 -1px;
+	}
+	50% {
+		translate: 0 0;
+	}
+	62.5% {
+		translate: 0 1px;
+	}
+	75% {
+		translate: 0 2px;
+	}
+	87.5% {
+		translate: 0 1px;
+	}
+}
+
+.title-letter {
+	position: relative;
+	display: inline-block;
+	font-size: 32px;
+	line-height: 1.2;
+	white-space: pre;
+	-webkit-text-stroke: 8px black;
+	-webkit-text-fill-color: black;
+	paint-order: stroke fill;
+	transform: scale(0);
+	--pop-delay: calc(var(--i) * 0.01s);
+	animation: logo-pop 0.3s steps(6) var(--pop-delay) forwards;
+	animation-play-state: paused;
+}
+
+.title-letter::after {
+	content: attr(data-text);
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	-webkit-text-stroke: 0;
+	background: linear-gradient(to right, #EA5B5B, #EA5B8F);
+	background-size: calc(var(--total) * 1ch) 100%;
+	background-position: calc(var(--i) * -1ch) 0;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.title-letter::before {
+	content: attr(data-text);
+	position: absolute;
+	left: 4px;
+	top: 4px;
+	z-index: -1;
+	-webkit-text-stroke: 8px #571D46;
+	-webkit-text-fill-color: #571D46;
+	paint-order: stroke fill;
+}
+
+.section-title {
+	position: relative;
+	display: inline-block;
+	font-family: "Minecraft", monospace;
+	font-size: 48px;
+	line-height: 1.2;
+	white-space: pre;
+	-webkit-text-stroke: 8px black;
+	-webkit-text-fill-color: black;
+	paint-order: stroke fill;
+}
+
+.section-title::before {
+	content: attr(data-text);
+	position: absolute;
+	inset: 0;
+	translate: 4px 4px;
+	z-index: -1;
+	-webkit-text-stroke: 8px #571D46;
+	-webkit-text-fill-color: #571D46;
+	paint-order: stroke fill;
+}
+
+.section-title::after {
+	content: attr(data-text);
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	-webkit-text-stroke: 0;
+	background: linear-gradient(to right, #EA5B5B, #EA5B8F);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+
+
+.section-body {
+	font-size: 24px;
+	color: white;
+	text-shadow: 3px 3px 0 black;
+}
+
+@keyframes logo-pop {
+	0% {
+		transform: scale(0);
+	}
+	60% {
+		transform: scale(1.15);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes logo-pop-click {
+	0% {
+		transform: scale(0.7);
+	}
+	60% {
+		transform: scale(1.15);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes logo-bob {
+	0%,
+	100% {
+		translate: 0 0;
+	}
+	12.5% {
+		translate: 0 -2px;
+	}
+	25% {
+		translate: 0 -4px;
+	}
+	37.5% {
+		translate: 0 -2px;
+	}
+	50% {
+		translate: 0 0;
+	}
+	62.5% {
+		translate: 0 2px;
+	}
+	75% {
+		translate: 0 4px;
+	}
+	87.5% {
+		translate: 0 2px;
+	}
+}
+
+.logo-letter-wrap {
+	--bob-delay: calc(var(--i) * -0.5s);
+	display: inline-flex;
+	animation: logo-bob 2.5s steps(1) var(--bob-delay) infinite;
+	animation-play-state: paused;
+}
+
+.logo-letter {
+	--pop-delay: calc(var(--i) * 0.08s);
+	height: 128px;
+	transform: scale(0);
+	image-rendering: pixelated;
+	animation: logo-pop 0.3s ease-out var(--pop-delay) forwards;
+	animation-play-state: paused;
+}
+
+
+.hackclub-badge {
+	position: absolute;
+	top: -80px;
+	left: 12px;
+	width: 160px;
+	max-width: none;
+	image-rendering: pixelated;
+	transform: scale(0);
+	animation: logo-pop 0.3s steps(6) 0.2s forwards;
+	animation-play-state: paused;
+}
