@@ -16,6 +16,14 @@
 	font-display: swap;
 }
 
+@font-face {
+	font-family: "Minecraftia";
+	src: url("/fonts/MinecraftBold.otf") format("opentype");
+	font-weight: bold;
+	font-style: normal;
+	font-display: swap;
+}
+
 body {
 	background: black;
 	font-family: "Minecraft", monospace;
@@ -141,9 +149,9 @@ body {
 
 
 .section-body {
-	font-size: 24px;
-	color: white;
-	text-shadow: 3px 3px 0 black;
+	font-family: "Minecraftia", monospace;
+	font-size: 30px;
+	color: black;
 }
 
 @keyframes logo-pop {
@@ -225,4 +233,136 @@ body {
 	transform: scale(0);
 	animation: logo-pop 0.3s steps(6) 0.2s forwards;
 	animation-play-state: paused;
+}
+
+.button-pop-wrap {
+	transform: scale(0);
+	animation: logo-pop 0.3s steps(6) 0.25s forwards;
+	animation-play-state: paused;
+}
+
+.button-pop {
+	position: relative;
+}
+
+.sign {
+	animation: sign-bob 3s ease-in-out infinite;
+}
+
+
+
+@keyframes sign-bob {
+	0%, 100% { translate: 0 0; }
+	50% { translate: 0 -32px; }
+}
+
+.plank-box {
+	--sign-width: 525px;
+	--sign-height: 250px;
+	--sign-depth: 40px;
+}
+
+.plank-face {
+	position: absolute;
+	background: url("/img/sign-front.png") repeat;
+	background-size: 256px;
+	image-rendering: pixelated;
+	box-sizing: border-box;
+}
+
+.plank-front {
+	width: var(--sign-width);
+	height: var(--sign-height);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transform: translateZ(calc(var(--sign-depth) / 2));
+}
+
+.plank-back {
+	width: var(--sign-width);
+	height: var(--sign-height);
+	transform: rotateY(180deg) translateZ(calc(var(--sign-depth) / 2));
+}
+
+.plank-top {
+	width: var(--sign-width);
+	height: var(--sign-depth);
+	transform: rotateX(90deg) translateZ(calc(var(--sign-depth) / 2));
+	top: 0;
+}
+
+.plank-bottom {
+	width: var(--sign-width);
+	height: var(--sign-depth);
+	transform: rotateX(-90deg) translateZ(calc(var(--sign-depth) / 2));
+	bottom: 0;
+}
+
+.plank-left {
+	width: var(--sign-depth);
+	height: var(--sign-height);
+	transform: rotateY(-90deg) translateZ(calc(var(--sign-depth) / 2));
+	left: 0;
+}
+
+.plank-right {
+	width: var(--sign-depth);
+	height: var(--sign-height);
+	transform: rotateY(90deg) translateZ(calc(var(--sign-depth) / 2));
+	right: 0;
+}
+
+.plank-stem {
+	--stem-height: 150px;
+	--stem-depth: var(--sign-depth);
+}
+
+.plank-stem .plank-face {
+	background-image: url("/img/sign-stem.png");
+	background-size: 64px;
+}
+
+.stem-front {
+	width: 80px;
+	height: var(--stem-height);
+	transform: translateZ(calc(var(--stem-depth) / 2));
+}
+
+.stem-back {
+	width: 80px;
+	height: var(--stem-height);
+	transform: rotateY(180deg) translateZ(calc(var(--stem-depth) / 2));
+}
+
+.stem-left {
+	width: var(--stem-depth);
+	height: var(--stem-height);
+	transform: rotateY(-90deg) translateZ(calc(var(--stem-depth) / 2));
+	left: 0;
+}
+
+.stem-right {
+	width: var(--stem-depth);
+	height: var(--stem-height);
+	transform: rotateY(90deg) translateZ(calc(var(--stem-depth) / 2));
+	right: 0;
+}
+
+.stem-bottom {
+	width: 80px;
+	height: var(--stem-depth);
+	transform: rotateX(-90deg) translateZ(calc(var(--stem-depth) / 2));
+	bottom: 0;
+}
+
+.minecraft-text {
+	text-shadow: 4px 4px 0px #571D46;
+	font-family: "Minecraftia";
+	-webkit-text-stroke: 8px black;
+	paint-order: stroke fill;
+}
+
+b {
+	font-size: 1.25em;
 }

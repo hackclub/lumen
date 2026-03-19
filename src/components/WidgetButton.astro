@@ -1,0 +1,52 @@
+---
+interface Props {
+  href?: string;
+}
+
+const { href = "#" } = Astro.props;
+---
+
+<a href={href} target="_blank" class="widget-btn w-full">
+  <img src="/img/container/btn-tl.png" alt="" />
+  <img src="/img/container/btn-tm.png" alt="" />
+  <img src="/img/container/btn-tr.png" alt="" />
+  <img src="/img/container/btn-lm.png" alt="" />
+  <span class="btn-center flex justify-center items-center h-full translate-y-1">
+    <slot />
+  </span>
+  <img src="/img/container/btn-rm.png" alt="" />
+  <img src="/img/container/btn-bl.png" alt="" />
+  <img src="/img/container/btn-bm.png" alt="" />
+  <img src="/img/container/btn-br.png" alt="" />
+</a>
+
+<style>
+  .widget-btn {
+    display: inline-grid;
+    grid-template-columns: 12px auto 12px;
+    grid-template-rows: 12px auto 12px;
+    image-rendering: pixelated;
+    cursor: pointer;
+    text-decoration: none;
+    align-self: start;
+  }
+
+  .widget-btn img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    image-rendering: pixelated;
+  }
+
+  .btn-center {
+    background: #c6c6c6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.5rem;
+    font-family: "Minecraftia";
+    color: black;
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+interface Props {
+  question: string;
+}
+
+const { question } = Astro.props;
+---
+
+<div class="nine-slice">
+  <img src="/img/container/ui-container-tl.png" alt="" />
+  <img src="/img/container/ui-container-tm.png" alt="" />
+  <img src="/img/container/ui-container-tr.png" alt="" />
+  <img src="/img/container/ui-container-lm.png" alt="" />
+  <div class="ns-center">
+    <div class="faq-question">
+      <span>{question}</span>
+    </div>
+    <div class="faq-answer">
+      <slot />
+    </div>
+  </div>
+  <img src="/img/container/ui-container-rm.png" alt="" />
+  <img src="/img/container/ui-container-bl.png" alt="" />
+  <img src="/img/container/ui-container-bm.png" alt="" />
+  <img src="/img/container/ui-container-br.png" alt="" />
+</div>
+
+<style>
+  * {
+    font-family: "Minecraftia";
+  }
+
+  .nine-slice {
+    display: grid;
+    grid-template-columns: 16px 1fr 16px;
+    grid-template-rows: 16px 1fr 16px;
+    image-rendering: pixelated;
+    align-self: start;
+  }
+
+  .nine-slice img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    image-rendering: pixelated;
+  }
+
+  .ns-center {
+    background: #c6c6c6;
+    padding: 1rem;
+  }
+
+  .faq-question {
+    font-weight: 600;
+    font-size: 24px;
+    color: black;
+  }
+
+  .faq-answer {
+    margin-top: 1rem;
+    color: black;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+</style>

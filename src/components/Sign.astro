@@ -1,0 +1,60 @@
+---
+interface Props {
+  x?: number;
+  y?: number;
+  z?: number;
+  rotateX?: number;
+  rotateY?: number;
+  rotateZ?: number;
+  initialRotation?: [number, number, number];
+  finalRotation?: [number, number, number];
+  finalScrollY?: number;
+  bobDelay?: number;
+  href?: string;
+}
+
+const { x, y, z, rotateX, rotateY, rotateZ, initialRotation = [0,0,0], finalRotation = [0,0,0], finalScrollY = 1000, bobDelay = 0, href } = Astro.props;
+const transform = `translate3d(${x}px, ${y}px, ${z}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
+---
+
+{href ? (
+  <a href={href} target="_blank" rel="noopener noreferrer" class="sign sign-link" data-initial={JSON.stringify(initialRotation)} data-final={JSON.stringify(finalRotation)} data-final-scroll={finalScrollY} style={`transform-style: preserve-3d; position: absolute; transform: ${transform}; animation-delay: ${-bobDelay}s; display: block; text-decoration: none; color: inherit; cursor: pointer; width: var(--sign-width, 525px); height: var(--sign-height, 250px);`}>
+    <div class="plank-box" style="transform-style: preserve-3d; width: var(--sign-width); height: var(--sign-height); position: relative;">
+      <div class="plank-face plank-front">
+        <slot />
+      </div>
+      <div class="plank-face plank-back"></div>
+      <div class="plank-face plank-top"></div>
+      <div class="plank-face plank-bottom"></div>
+      <div class="plank-face plank-left"></div>
+      <div class="plank-face plank-right"></div>
+      <div class="plank-stem" style="transform-style: preserve-3d; position: absolute; width: 80px; height: 150px; left: calc((var(--sign-width) - 80px) / 2); top: var(--sign-height);">
+        <div class="plank-face stem-front"></div>
+        <div class="plank-face stem-back"></div>
+        <div class="plank-face stem-left"></div>
+        <div class="plank-face stem-right"></div>
+        <div class="plank-face stem-bottom"></div>
+      </div>
+    </div>
+  </a>
+) : (
+  <div class="sign" data-initial={JSON.stringify(initialRotation)} data-final={JSON.stringify(finalRotation)} data-final-scroll={finalScrollY} style={`transform-style: preserve-3d; position: absolute; transform: ${transform}; animation-delay: ${-bobDelay}s;`}>
+    <div class="plank-box" style="transform-style: preserve-3d; width: var(--sign-width); height: var(--sign-height); position: relative;">
+      <div class="plank-face plank-front">
+        <slot />
+      </div>
+      <div class="plank-face plank-back"></div>
+      <div class="plank-face plank-top"></div>
+      <div class="plank-face plank-bottom"></div>
+      <div class="plank-face plank-left"></div>
+      <div class="plank-face plank-right"></div>
+      <div class="plank-stem" style="transform-style: preserve-3d; position: absolute; width: 80px; height: 150px; left: calc((var(--sign-width) - 80px) / 2); top: var(--sign-height);">
+        <div class="plank-face stem-front"></div>
+        <div class="plank-face stem-back"></div>
+        <div class="plank-face stem-left"></div>
+        <div class="plank-face stem-right"></div>
+        <div class="plank-face stem-bottom"></div>
+      </div>
+    </div>
+  </div>
+)}
