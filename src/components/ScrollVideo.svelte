@@ -6,8 +6,10 @@
 	let targetTime = $state(0);
 	let ready = $state(false);
 	let rafId: number;
+	let lastSeekTime = 0;
 
 	const LERP_FACTOR = 0.3;
+	const FIREFOX_SEEK_INTERVAL = 17;
 
 	function lerp(start: number, end: number, factor: number): number {
 		return start + (end - start) * factor;
@@ -44,8 +46,18 @@
 			currentTime = lerp(currentTime, targetTime, LERP_FACTOR);
 
 			if (Math.abs(currentTime - targetTime) > 0.001) {
-				videoEl.currentTime = currentTime;
-				console.log(videoEl.currentTime);
+				const now = performance.now();
+				if ("fastSeek" in videoEl) {
+					// fastSeek is generally only supported on Firefox, but it makes the movement MUCH smoother.
+					// Rate-limit seeks on Firefox to avoid overwhelming the decoder.
+					if (now - lastSeekTime >= FIREFOX_SEEK_INTERVAL) {
+						videoEl.fastSeek(currentTime);
+						lastSeekTime = now;
+					}
+				}
+				else {
+					(videoEl as HTMLVideoElement).currentTime = currentTime;
+				}
 			}
 		}
 
