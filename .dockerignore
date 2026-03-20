@@ -1,0 +1,9 @@
+.git
+.gitignore
+.DS_Store
+.astro
+dist
+node_modules
+npm-debug.log*
+Dockerfile*
+README.md
