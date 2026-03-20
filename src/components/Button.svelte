@@ -25,22 +25,22 @@
     <img
       src="/img/button-normal.png"
       alt=""
-      class="block [zoom:3] [image-rendering:pixelated] group-hover:hidden group-active:hidden"
+      class="block w-full min-w-fit [zoom:3] [image-rendering:pixelated] group-hover:hidden group-active:hidden"
       draggable="false"
     />
     <img
       src="/img/button-hover.png"
       alt=""
-      class="hidden [zoom:3] [image-rendering:pixelated] group-hover:block group-active:hidden"
+      class="hidden w-full min-w-fit [zoom:3] [image-rendering:pixelated] group-hover:block group-active:hidden"
       draggable="false"
     />
     <img
       src="/img/button-pressed.png"
       alt=""
-      class="hidden [zoom:3] [image-rendering:pixelated] group-active:block"
+      class="hidden w-full min-w-fit [zoom:3] [image-rendering:pixelated] group-active:block"
       draggable="false"
     />
-    <span class="absolute inset-0 flex items-center justify-center pointer-events-none [text-shadow:3px_3px_0_#1F102B] translate-y-1.5 group-active:translate-y-2.5">
+    <span class="absolute inset-0 flex items-center justify-center pointer-events-none [text-shadow:3px_3px_0_#1F102B] translate-y-1 sm:translate-y-1.5 group-active:translate-y-2.5 max-sm:text-[20px] max-[240px]:text-[16px]!">
       <slot />
     </span>
   </a>

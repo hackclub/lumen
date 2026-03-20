@@ -31,8 +31,15 @@ body {
 
 .hero-title-wrap {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	margin-top: 16px;
+}
+
+.title-word-wrap {
+	display: inline-flex;
+	white-space: nowrap;
+	margin: 0 4px;
 }
 
 .title-letter-wrap {
@@ -216,12 +223,75 @@ body {
 .logo-letter {
 	--pop-delay: calc(var(--i) * 0.08s);
 	height: 128px;
+	width: auto;
 	transform: scale(0);
 	image-rendering: pixelated;
 	animation: logo-pop 0.3s ease-out var(--pop-delay) forwards;
 	animation-play-state: paused;
 }
 
+@media (max-width: 640px) {
+	.logo-letter {
+		height: 100px;
+		width: auto;
+		max-height: 100px;
+	}
+}
+
+@media (max-width: 370px) {
+	.logo-letter {
+		height: 80px;
+	}
+
+	.title-letter {
+		font-size: 20px;
+		-webkit-text-stroke: 6px black;
+	}
+}
+
+@media (max-width: 300px) {
+	.logo-letter {
+		height: 23vw;
+	}
+}
+
+@media (max-width: 850px) {
+	.plank-box-section {
+		display: flex !important;
+		flex-direction: column !important;
+		align-items: flex-start !important;
+		justify-content: flex-start !important;
+		height: auto !important;
+		padding: 2rem 0 2rem 2rem !important;
+		gap: 20rem !important;
+	}
+
+	.plank-box-section .sign {
+		--sign-width: 350px !important;
+		--sign-height: 166px !important;
+		position: relative !important;
+		transform: translate3d(0, 0, 0) !important;
+	}
+
+	.plank-box-section .plank-box {
+		transform: rotateX(2deg) rotateY(3deg) rotateZ(0deg) !important;
+	}
+
+	.plank-box-section .plank-face {
+		filter: brightness(1) !important;
+	}
+}
+
+@media (max-width: 500px) {
+	.section-title {
+		font-size: 40px;
+	}
+
+	.minecraft-text {
+		font-size: 24px;
+		padding: 0 2em;
+	}
+}
 
 .hackclub-badge {
 	position: absolute;

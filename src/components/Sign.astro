@@ -14,7 +14,7 @@ interface Props {
 }
 
 const { x, y, z, rotateX, rotateY, rotateZ, initialRotation = [0,0,0], finalRotation = [0,0,0], finalScrollY = 1000, bobDelay = 0, href } = Astro.props;
-const transform = `translate3d(${x}px, ${y}px, ${z}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
+const transform = `translate3d(${(x || 0) / 25}vw, ${y}px, ${z}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
 ---
 
 {href ? (

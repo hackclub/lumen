@@ -7,14 +7,21 @@ import FAQQuestion from "../components/FAQQuestion.astro";
 import WidgetButton from "../components/WidgetButton.astro";
 
 const titleText = "Make Minecraft shaders, get Minecraft and GPUs!";
-const titleChars = titleText.split("");
+const titleWords = titleText.split(" ");
+let charIndex = 0;
+const wordGroups = titleWords.map((word) => {
+  const chars = word.split("").map((char) => ({ char, index: charIndex++ }));
+  charIndex++; // account for space
+  return chars;
+});
+const totalChars = titleText.replace(/ /g, "").length;
 ---
 
 <ScrollVideo client:only="svelte" />
 
 <main class="relative">
   <section class="flex h-screen items-center justify-center">
-    <div class="max-w-2xl text-center text-white">
+    <div class="max-w-4xl text-center text-white">
       <div class="flex items-end justify-center cursor-pointer">
         {
           [1, 2, 3, 4, 5].map((i) => (
@@ -40,16 +47,20 @@ const titleChars = titleText.split("");
       </div>
 
       <div class="hero-title-wrap">
-        {titleChars.map((char, i) => (
-          <span
-            class="title-letter-wrap"
-            style={`--i: ${i}`}
-          >
-            <span
-              class="title-letter"
-              data-text={char}
-              style={`--i: ${i}; --total: ${titleChars.length}`}
-            >{char}</span>
+        {wordGroups.map((word, wi) => (
+          <span class="title-word-wrap">
+            {word.map(({ char, index }) => (
+              <span
+                class="title-letter-wrap"
+                style={`--i: ${index}`}
+              >
+                <span
+                  class="title-letter"
+                  data-text={char}
+                  style={`--i: ${index}; --total: ${totalChars}`}
+                >{char}</span>
+              </span>
+            ))}
           </span>
         ))}
       </div>
@@ -97,7 +108,7 @@ const titleChars = titleText.split("");
     </Sign>
   </section>
 
-  <section class="flex h-screen items-center justify-center">
+  <section class="flex items-center justify-center">
     <div class="max-w-4xl w-full text-white px-6 pt-128">
       <h2 class="section-title text-center !text-6xl mb-16" data-text="FAQ">FAQ</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
