@@ -30,7 +30,7 @@ Here is a **fragment shader**. For each pixel (or, *fragment*), the `mainImage` 
 
 This is GLSL - the **OpenGL Shading Language**. This is the language we will be using to write our shaders! We are given the **current pixel coordinate**, and we are expected to provide **a color for it**.
 
-In fragment shaders, we usually also have access to at least one **texture**. Here's an example of a silly kitty being passed as our texture:
+In fragment shaders, we usually also have access to at least one **texture**. Here's an example of a silly kitty being passed as our texture. We multiply all pixel values by 2x, making it twice as bright!
 
 <TextureFragmentShaderEditor
   client:load

@@ -48,7 +48,7 @@ const chapterItems = siblingEntries.map((entry, index) => ({
       <div class="guide-page-title__hero">
         <GuideHeroVideo client:load />
         <div class="guide-page-title__hero-copy">
-          <LumenLogo variant="guide" />
+          <LumenLogo variant="guide" showHackclubBadge />
           <div class="guide-page-title__hero-lines">
             {heroLines.map((line) => <BobbingText text={line} variant="guide" />)}
           </div>
