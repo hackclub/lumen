@@ -5,16 +5,8 @@ import Sign from "../components/Sign.astro";
 import Button from "../components/Button.svelte";
 import FAQQuestion from "../components/FAQQuestion.astro";
 import WidgetButton from "../components/WidgetButton.astro";
-
-const titleText = "Make Minecraft shaders, get Minecraft and GPUs!";
-const titleWords = titleText.split(" ");
-let charIndex = 0;
-const wordGroups = titleWords.map((word) => {
-  const chars = word.split("").map((char) => ({ char, index: charIndex++ }));
-  charIndex++; // account for space
-  return chars;
-});
-const totalChars = titleText.replace(/ /g, "").length;
+import LumenLogo from "../components/LumenLogo.astro";
+import BobbingText from "../components/BobbingText.astro";
 ---
 
 <ScrollVideo client:only="svelte" />
@@ -23,47 +15,14 @@ const totalChars = titleText.replace(/ /g, "").length;
   <section class="flex h-screen items-center justify-center">
     <div class="max-w-4xl text-center text-white">
       <div class="flex items-end justify-center cursor-pointer">
-        {
-          [1, 2, 3, 4, 5].map((i) => (
-            <span
-              class={`logo-letter-wrap ${i === 1 ? "relative" : ""}`}
-              style={`--i: ${i - 1}`}
-            >
-              <img src={`/img/letter${i}.png`} alt="" class="logo-letter" draggable="false" />
-
-              {i === 1 && (
-                <a href="https://hackclub.com" target="_blank">
-                  <img
-                    draggable="false"
-                    src="/img/hackclub.png"
-                    alt="Hack Club"
-                    class="hackclub-badge"
-                  />
-                </a>
-              )}
-            </span>
-          ))
-        }
+        <LumenLogo variant="home" interactive showHackclubBadge />
       </div>
 
-      <div class="hero-title-wrap">
-        {wordGroups.map((word, wi) => (
-          <span class="title-word-wrap">
-            {word.map(({ char, index }) => (
-              <span
-                class="title-letter-wrap"
-                style={`--i: ${index}`}
-              >
-                <span
-                  class="title-letter"
-                  data-text={char}
-                  style={`--i: ${index}; --total: ${totalChars}`}
-                >{char}</span>
-              </span>
-            ))}
-          </span>
-        ))}
-      </div>
+      <BobbingText
+        text="Make Minecraft shaders, get Minecraft and GPUs!"
+        variant="home"
+        class="mt-4"
+      />
 
       <Button client:load href="https://submit.hackclub.com/hackcraft-lumen">Submit your shader</Button>
     </div>
@@ -153,44 +112,10 @@ const totalChars = titleText.replace(/ /g, "").length;
 </main>
 
 <script>
-  const wraps = document.querySelectorAll<HTMLElement>(".logo-letter-wrap");
-  const letters = document.querySelectorAll<HTMLElement>(".logo-letter");
-  const badge = document.querySelector<HTMLElement>(".hackclub-badge");
-  const titleWraps = document.querySelectorAll<HTMLElement>(".title-letter-wrap");
-  const titleLetters = document.querySelectorAll<HTMLElement>(".title-letter");
   const buttonPopWrap = document.querySelector<HTMLElement>(".button-pop-wrap");
 
   window.addEventListener("load", () => {
-    wraps.forEach((el) => {
-      el.style.animationPlayState = "running";
-    });
-    letters.forEach((el) => {
-      el.style.animationPlayState = "running";
-    });
-    if (badge) badge.style.animationPlayState = "running";
-    titleWraps.forEach((el) => {
-      el.style.animationPlayState = "running";
-    });
-    titleLetters.forEach((el) => {
-      el.style.animationPlayState = "running";
-    });
     if (buttonPopWrap) buttonPopWrap.style.animationPlayState = "running";
-  });
-
-  letters.forEach((el) => {
-    el.addEventListener("click", () => {
-      el.style.animation = "none";
-      el.offsetHeight;
-      el.style.animation = "logo-pop-click 0.3s steps(6) forwards";
-    });
-  });
-
-  titleLetters.forEach((el) => {
-    el.addEventListener("click", () => {
-      el.style.animation = "none";
-      el.offsetHeight;
-      el.style.animation = "logo-pop-click 0.3s steps(6) forwards";
-    });
   });
 
   // Lighting setup

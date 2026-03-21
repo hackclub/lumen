@@ -1,0 +1,240 @@
+---
+interface Props {
+  text: string;
+  class?: string;
+  variant?: 'home' | 'guide';
+  interactive?: boolean;
+}
+
+const {
+  text,
+  class: className,
+  variant = 'home',
+  interactive = true
+} = Astro.props;
+
+const words = text.trim().split(/\s+/).filter(Boolean);
+let charIndex = 0;
+const wordGroups = words.map((word) => {
+  const chars = word.split('').map((char) => ({ char, index: charIndex++ }));
+  charIndex++;
+  return chars;
+});
+const totalChars = text.replace(/\s+/g, '').length;
+---
+
+<div
+  class:list={['bobbing-text', `bobbing-text--${variant}`, className]}
+  data-bobbing-text
+  data-interactive={interactive ? 'true' : 'false'}
+>
+  {wordGroups.map((word) => (
+    <span class="bobbing-text__word">
+      {word.map(({ char, index }) => (
+        <span class="bobbing-text__letter-wrap" style={`--i: ${index}`}>
+          <span
+            class="bobbing-text__letter"
+            data-text={char}
+            style={`--i: ${index}; --total: ${totalChars}`}
+          >
+            {char}
+          </span>
+        </span>
+      ))}
+    </span>
+  ))}
+</div>
+
+{
+  <script is:inline>
+    const startBobbingTextAnimations = () => {
+      document.querySelectorAll('[data-bobbing-text]').forEach((root) => {
+        if (!(root instanceof HTMLElement)) return;
+
+        root.querySelectorAll('.bobbing-text__letter-wrap').forEach((wrap) => {
+          if (wrap instanceof HTMLElement) {
+            wrap.style.animationPlayState = 'running';
+          }
+        });
+
+        root.querySelectorAll('.bobbing-text__letter').forEach((letter) => {
+          if (!(letter instanceof HTMLElement)) return;
+
+          letter.style.animationPlayState = 'running';
+
+          if (root.dataset.interactive !== 'true' || letter.dataset.bound === 'true') return;
+          letter.dataset.bound = 'true';
+
+          letter.addEventListener('click', () => {
+            letter.classList.remove('is-popping');
+            void letter.offsetWidth;
+            letter.classList.add('is-popping');
+          });
+
+          letter.addEventListener('animationend', () => {
+            if (letter.classList.contains('is-popping')) {
+              letter.classList.remove('is-popping');
+            }
+          });
+        });
+      });
+    };
+
+    if (document.readyState === 'complete') {
+      startBobbingTextAnimations();
+    } else {
+      window.addEventListener('load', startBobbingTextAnimations, { once: true });
+    }
+  </script>
+}
+
+<style>
+  @font-face {
+    font-family: "Minecraft";
+    src: url("/fonts/Minecraft.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  .bobbing-text {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .bobbing-text__word {
+    display: inline-flex;
+    white-space: nowrap;
+    margin: 0 4px;
+  }
+
+  .bobbing-text__letter-wrap {
+    --bob-delay: calc(var(--i) * -0.08s);
+    display: inline-flex;
+    margin: 0 1px;
+    animation: bobbing-text-bob 2.5s steps(1) var(--bob-delay) infinite;
+    animation-play-state: paused;
+  }
+
+  .bobbing-text__letter {
+    position: relative;
+    display: inline-block;
+    font-family: "Minecraft", monospace;
+    font-size: 32px;
+    line-height: 1.2;
+    -webkit-text-stroke: 8px black;
+    -webkit-text-fill-color: black;
+    paint-order: stroke fill;
+    transform: scale(0);
+    animation: bobbing-text-pop 0.3s steps(6) var(--pop-delay) forwards;
+    animation-play-state: paused;
+  }
+
+  .bobbing-text__letter.is-popping {
+    animation: bobbing-text-pop-click 0.3s steps(6) forwards;
+  }
+
+  .bobbing-text__letter {
+    --pop-delay: calc(var(--i) * 0.01s);
+  }
+
+  .bobbing-text__letter::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    -webkit-text-stroke: 0;
+    background: linear-gradient(to right, #ea5b5b, #ea5b8f);
+    background-size: calc(var(--total) * 1ch) 100%;
+    background-position: calc(var(--i) * -1ch) 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .bobbing-text__letter::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    z-index: -1;
+    -webkit-text-stroke: 8px #571d46;
+    -webkit-text-fill-color: #571d46;
+    paint-order: stroke fill;
+  }
+
+  @media (max-width: 370px) {
+    .bobbing-text__letter {
+      font-size: 20px;
+      -webkit-text-stroke: 6px black;
+    }
+
+    .bobbing-text__letter::before {
+      -webkit-text-stroke: 6px #571d46;
+    }
+  }
+
+  @keyframes bobbing-text-bob {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+
+    12.5% {
+      translate: 0 -1px;
+    }
+
+    25% {
+      translate: 0 -2px;
+    }
+
+    37.5% {
+      translate: 0 -1px;
+    }
+
+    50% {
+      translate: 0 0;
+    }
+
+    62.5% {
+      translate: 0 1px;
+    }
+
+    75% {
+      translate: 0 2px;
+    }
+
+    87.5% {
+      translate: 0 1px;
+    }
+  }
+
+  @keyframes bobbing-text-pop {
+    0% {
+      transform: scale(0);
+    }
+
+    60% {
+      transform: scale(1.15);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes bobbing-text-pop-click {
+    0% {
+      transform: scale(0.7);
+    }
+
+    60% {
+      transform: scale(1.15);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+</style>

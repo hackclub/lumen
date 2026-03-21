@@ -1,0 +1,214 @@
+---
+interface Props {
+  class?: string;
+  variant?: 'home' | 'guide';
+  interactive?: boolean;
+  showHackclubBadge?: boolean;
+}
+
+const {
+  class: className,
+  variant = 'guide',
+  interactive = false,
+  showHackclubBadge = false
+} = Astro.props;
+---
+
+<div
+  class:list={['lumen-logo', `lumen-logo--${variant}`, className]}
+  data-lumen-logo
+  data-interactive={interactive ? 'true' : 'false'}
+>
+  {
+    [1, 2, 3, 4, 5].map((i) => (
+      <span class:list={['lumen-logo__letter-wrap', { 'lumen-logo__letter-wrap--first': i === 1 }]} style={`--i: ${i - 1}`}>
+        <img
+          src={`/img/letter${i}.png`}
+          alt={i === 1 ? 'Lumen' : ''}
+          class="lumen-logo__letter"
+          draggable="false"
+        />
+
+        {
+          i === 1 && showHackclubBadge && (
+            <a
+              href="https://hackclub.com"
+              target="_blank"
+              rel="noreferrer"
+              class="lumen-logo__badge-link"
+              aria-label="Hack Club"
+            >
+              <img
+                draggable="false"
+                src="/img/hackclub.png"
+                alt="Hack Club"
+                class="lumen-logo__badge"
+              />
+            </a>
+          )
+        }
+      </span>
+    ))
+  }
+</div>
+
+{
+  interactive && (
+    <script is:inline>
+      document.querySelectorAll('[data-lumen-logo][data-interactive="true"]').forEach((logo) => {
+        if (logo instanceof HTMLElement === false || logo.dataset.bound === 'true') return;
+        logo.dataset.bound = 'true';
+
+        logo.querySelectorAll('.lumen-logo__letter').forEach((letter) => {
+          if (!(letter instanceof HTMLElement)) return;
+
+          letter.addEventListener('click', () => {
+            letter.classList.remove('is-popping');
+            void letter.offsetWidth;
+            letter.classList.add('is-popping');
+          });
+
+          letter.addEventListener('animationend', () => {
+            if (letter.classList.contains('is-popping')) {
+              letter.classList.remove('is-popping');
+            }
+          });
+        });
+      });
+    </script>
+  )
+}
+
+<style>
+  .lumen-logo {
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .lumen-logo__letter-wrap {
+    --bob-delay: calc(var(--i) * -0.5s);
+    position: relative;
+    display: inline-flex;
+    align-items: flex-end;
+    animation: logo-bob 2.5s steps(1) var(--bob-delay) infinite;
+  }
+
+  .lumen-logo__letter {
+    --pop-delay: calc(var(--i) * 0.08s);
+    width: auto;
+    transform: scale(0);
+    image-rendering: pixelated;
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.35));
+    animation: logo-pop 0.3s ease-out var(--pop-delay) forwards;
+  }
+
+  .lumen-logo__letter.is-popping {
+    animation: logo-pop-click 0.3s steps(6) forwards;
+  }
+
+  .lumen-logo__badge-link {
+    position: absolute;
+    top: -80px;
+    left: 12px;
+  }
+
+  .lumen-logo__badge {
+    width: 160px;
+    max-width: none;
+    transform: scale(0);
+    image-rendering: pixelated;
+    animation: logo-pop 0.3s steps(6) 0.2s forwards;
+  }
+
+  .lumen-logo--home .lumen-logo__letter {
+    height: 128px;
+  }
+
+  .lumen-logo--guide .lumen-logo__letter {
+    height: clamp(3.5rem, 8vw, 5.8rem);
+  }
+
+  @media (max-width: 640px) {
+    .lumen-logo--home .lumen-logo__letter {
+      height: 100px;
+      max-height: 100px;
+    }
+  }
+
+  @media (max-width: 370px) {
+    .lumen-logo--home .lumen-logo__letter {
+      height: 80px;
+    }
+  }
+
+  @media (max-width: 300px) {
+    .lumen-logo--home .lumen-logo__letter {
+      height: 23vw;
+    }
+  }
+
+  @keyframes logo-pop {
+    0% {
+      transform: scale(0);
+    }
+
+    60% {
+      transform: scale(1.15);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes logo-pop-click {
+    0% {
+      transform: scale(0.7);
+    }
+
+    60% {
+      transform: scale(1.15);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes logo-bob {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+
+    12.5% {
+      translate: 0 -2px;
+    }
+
+    25% {
+      translate: 0 -4px;
+    }
+
+    37.5% {
+      translate: 0 -2px;
+    }
+
+    50% {
+      translate: 0 0;
+    }
+
+    62.5% {
+      translate: 0 2px;
+    }
+
+    75% {
+      translate: 0 4px;
+    }
+
+    87.5% {
+      translate: 0 2px;
+    }
+  }
+</style>

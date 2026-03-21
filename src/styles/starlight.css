@@ -1,0 +1,130 @@
+@import "@fontsource/source-serif-4/400.css";
+@import "@fontsource/source-serif-4/600.css";
+@import "@fontsource/source-serif-4/700.css";
+
+:root {
+  --guide-serif: "Source Serif 4", Georgia, Cambria, "Times New Roman", serif;
+  --sl-color-accent-low: #22131e;
+  --sl-color-accent: #e95b5f;
+  --sl-color-accent-high: #ffd0bc;
+  --sl-color-bg: #0d0a10;
+  --sl-color-bg-nav: #120d15;
+  --sl-color-bg-sidebar: #140f18;
+  --sl-color-gray-6: #1d1522;
+  --sl-color-text: #e8ddcf;
+  --sl-color-white: #fff7ef;
+  --sl-content-width: 50rem;
+}
+
+html {
+  background:
+    radial-gradient(circle at top, rgba(233, 91, 95, 0.08), transparent 30%),
+    linear-gradient(180deg, #0d0a10 0%, #130e17 100%);
+}
+
+body {
+  color: var(--sl-color-text);
+}
+
+.site-title {
+  letter-spacing: 0.04em;
+}
+
+.title-wrapper a,
+.guide-page-sidebar,
+.sl-markdown-content code,
+.sl-markdown-content pre {
+  font-family: var(--sl-font-system);
+}
+
+.content-panel:first-of-type {
+  padding: 0;
+}
+
+.content-panel:first-of-type .sl-container {
+  max-width: none;
+}
+
+.content-panel:first-of-type .sl-container > * {
+  margin-top: 0;
+}
+
+.content-panel:nth-of-type(2) {
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+}
+
+.sl-markdown-content {
+  color: #f2e7d9;
+  font-family: var(--guide-serif);
+  font-size: 1.12rem;
+  line-height: 1.82;
+}
+
+.sl-markdown-content > :where(p, ul, ol, blockquote, table) {
+  max-width: 40rem;
+}
+
+.sl-markdown-content > :where(p, ul, ol) {
+  text-wrap: pretty;
+}
+
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+.sl-markdown-content h4 {
+  color: #fff7ef;
+  font-family: var(--guide-serif);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.sl-markdown-content h2 {
+  margin-top: 4.5rem;
+  padding-top: 2.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.sl-markdown-content h2::before {
+  content: "Section";
+  display: block;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 208, 188, 0.84);
+  font-family: var(--sl-font-system);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.sl-markdown-content h3 {
+  margin-top: 2rem;
+  font-size: 1.65rem;
+}
+
+.sl-markdown-content h4 {
+  margin-top: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.sl-markdown-content a {
+  color: #ffd0bc;
+}
+
+.sl-markdown-content hr {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 50rem) {
+  .content-panel:nth-of-type(2) {
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+    padding-inline: 1rem;
+  }
+
+  .sl-markdown-content {
+    font-size: 1.04rem;
+    line-height: 1.75;
+  }
+}

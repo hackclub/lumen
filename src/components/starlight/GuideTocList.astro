@@ -1,0 +1,60 @@
+---
+interface TocItem {
+  depth: number;
+  slug: string;
+  text: string;
+  children: TocItem[];
+}
+
+interface Props {
+  items: TocItem[];
+}
+
+const { items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <ul class="guide-toc-list">
+      {items.map((item) => (
+        <li>
+          <a href={`#${item.slug}`}>{item.text}</a>
+          {item.children.length > 0 && <Astro.self items={item.children} />}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .guide-toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .guide-toc-list li + li {
+    margin-top: 0.25rem;
+  }
+
+  .guide-toc-list :global(ul) {
+    margin-top: 0.25rem;
+    padding-left: 1rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .guide-toc-list a {
+    display: block;
+    border-radius: 0.75rem;
+    padding: 0.45rem 0.65rem;
+    color: rgba(247, 239, 228, 0.86);
+    text-decoration: none;
+    transition: background-color 140ms ease, color 140ms ease, transform 140ms ease;
+  }
+
+  .guide-toc-list a:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff8ef;
+    transform: translateX(2px);
+  }
+</style>

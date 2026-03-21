@@ -213,45 +213,10 @@ body {
 	}
 }
 
-.logo-letter-wrap {
-	--bob-delay: calc(var(--i) * -0.5s);
-	display: inline-flex;
-	animation: logo-bob 2.5s steps(1) var(--bob-delay) infinite;
-	animation-play-state: paused;
-}
-
-.logo-letter {
-	--pop-delay: calc(var(--i) * 0.08s);
-	height: 128px;
-	width: auto;
-	transform: scale(0);
-	image-rendering: pixelated;
-	animation: logo-pop 0.3s ease-out var(--pop-delay) forwards;
-	animation-play-state: paused;
-}
-
-@media (max-width: 640px) {
-	.logo-letter {
-		height: 100px;
-		width: auto;
-		max-height: 100px;
-	}
-}
-
 @media (max-width: 370px) {
-	.logo-letter {
-		height: 80px;
-	}
-
 	.title-letter {
 		font-size: 20px;
 		-webkit-text-stroke: 6px black;
-	}
-}
-
-@media (max-width: 300px) {
-	.logo-letter {
-		height: 23vw;
 	}
 }
 
@@ -291,18 +256,6 @@ body {
 		font-size: 24px;
 		padding: 0 2em;
 	}
-}
-
-.hackclub-badge {
-	position: absolute;
-	top: -80px;
-	left: 12px;
-	width: 160px;
-	max-width: none;
-	image-rendering: pixelated;
-	transform: scale(0);
-	animation: logo-pop 0.3s steps(6) 0.2s forwards;
-	animation-play-state: paused;
 }
 
 .button-pop-wrap {
