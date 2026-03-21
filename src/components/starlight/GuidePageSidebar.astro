@@ -1,5 +1,4 @@
 ---
-import MobileTableOfContents from 'virtual:starlight/components/MobileTableOfContents';
 import GuideTocList from './GuideTocList.astro';
 
 const toc = Astro.locals.starlightRoute.toc;
@@ -9,9 +8,6 @@ const chapterItems = toc?.items?.filter((item) => item.slug !== '_top') ?? [];
 {
   toc && (
     <>
-      <div class="lg:sl-hidden">
-        <MobileTableOfContents />
-      </div>
       <div class="guide-page-sidebar sl-hidden lg:sl-block">
         <div class="guide-page-sidebar__panel">
           <p class="guide-page-sidebar__eyebrow">Guide Outline</p>

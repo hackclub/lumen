@@ -13,7 +13,7 @@
   --sl-color-gray-6: #1d1522;
   --sl-color-text: #e8ddcf;
   --sl-color-white: #fff7ef;
-  --sl-content-width: 50rem;
+  --sl-content-width: 45vw;
 }
 
 html {
@@ -52,7 +52,7 @@ body {
 .content-panel:nth-of-type(2) {
   padding-top: 2.5rem;
   padding-bottom: 4rem;
-  padding-inline: clamp(1rem, 4vw, 3rem);
+  padding-inline: clamp(0.875rem, 3vw, 2.5rem);
 }
 
 .sl-markdown-content {
@@ -62,12 +62,13 @@ body {
   line-height: 1.82;
 }
 
-.sl-markdown-content > :where(p, ul, ol, blockquote, table) {
-  max-width: 40rem;
-}
-
 .sl-markdown-content > :where(p, ul, ol) {
   text-wrap: pretty;
+}
+
+.sl-markdown-content > * {
+  max-width: none;
+  margin-inline: 0;
 }
 
 .sl-markdown-content h2,
@@ -120,7 +121,7 @@ body {
   .content-panel:nth-of-type(2) {
     padding-top: 1.5rem;
     padding-bottom: 3rem;
-    padding-inline: 1rem;
+    padding-inline: 0.875rem;
   }
 
   .sl-markdown-content {

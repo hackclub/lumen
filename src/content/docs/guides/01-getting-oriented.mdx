@@ -6,6 +6,51 @@ sidebar:
   order: 1
 ---
 
-import GuideHello from '../../../components/guides/GuideHello.svelte';
+import dedent from "dedent";
 
-hiii
+import FragmentShaderEditor from '../../../components/guides/FragmentShaderEditor.svelte';
+import TextureFragmentShaderEditor from '../../../components/guides/TextureFragmentShaderEditor.svelte';
+
+This guide is a gentle step-by-step introduction into the world of Minecraft shaderpacks. You'll learn how to create a shader like this:
+
+Fundamentally, a shader is just a program that tells your GPU what to do.
+
+Here is a **fragment shader**. For each pixel (or, *fragment*), the `mainImage` function determines what color to give it! We'll keep it simple, and just set it to red for all pixels.
+
+<FragmentShaderEditor
+  client:load
+  source={dedent`
+    // Mess around with this! This is editable!
+    void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+      // vec4 = "vector of 4 components"; red, green, blue, alpha (transparency)
+      fragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }`
+  }
+/>
+
+This is GLSL - the **OpenGL Shading Language**. This is the language we will be using to write our shaders! We are given the **current pixel coordinate**, and we are expected to provide **a color for it**.
+
+In fragment shaders, we usually also have access to at least one **texture**. Here's an example of a silly kitty being passed as our texture:
+
+<TextureFragmentShaderEditor
+  client:load
+  defaultTextureUrl="/img/kitty.jpg"
+  source={dedent`
+    void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+      // fragCoord is currently a value in the range of (0, 0) to (width, height).
+      // By dividing it by (width, height), we turn it into a value in the range of (0.0, 0.0) to (1.0, 1.0)!
+      // This is pretty handy, as this coordinate will now work with a texture of any resolution.
+      vec2 uv = fragCoord / iResolution.xy;
+
+      // Now - we check what pixel is in the texture.
+      // In GLSL, texture2D takes a texture and a coordinate, and gives us the pixel that resides there.
+      // The coordinate it expects is in the range of (0.0, 0.0) to (1.0, 1.0), which we got above!
+      vec3 sampled = texture2D(colortex0, uv).rgb;
+
+      // Let's make it twice as bright!
+      vec3 brighter = sampled * 2.0;
+
+      fragColor = vec4(brighter, 1.0);
+    }`
+  }
+/>

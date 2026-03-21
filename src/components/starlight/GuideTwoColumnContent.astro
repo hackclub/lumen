@@ -1,34 +1,11 @@
----
-const hasToc = Boolean(Astro.locals.starlightRoute.toc);
-const splitTitleLayout = Astro.locals.starlightRoute.id === 'guides/01-getting-oriented';
----
-
-<div
-  class:list={[
-    'guide-two-column',
-    {
-      'guide-two-column--toc': hasToc,
-      'guide-two-column--split-title': hasToc && splitTitleLayout
-    }
-  ]}
->
+<div class="guide-two-column">
   <div class="guide-two-column__main">
     <slot />
   </div>
-  {
-    hasToc && (
-      <aside class="guide-two-column__sidebar print:hidden">
-        <div class="guide-two-column__sidebar-inner">
-          <slot name="right-sidebar" />
-        </div>
-      </aside>
-    )
-  }
 </div>
 
 <style>
   .guide-two-column {
-    --guide-toc-width: clamp(16rem, 22vw, 20rem);
     width: 100%;
     max-width: none;
     margin: 0;
@@ -36,42 +13,5 @@ const splitTitleLayout = Astro.locals.starlightRoute.id === 'guides/01-getting-o
 
   .guide-two-column__main {
     min-width: 0;
-  }
-
-  @media (min-width: 72rem) {
-    .guide-two-column--toc {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(16rem, var(--guide-toc-width));
-      gap: 2rem;
-      align-items: start;
-    }
-
-    .guide-two-column__sidebar {
-      position: relative;
-      min-width: 0;
-    }
-
-    .guide-two-column__sidebar-inner {
-      position: sticky;
-      top: 1.5rem;
-    }
-
-    .guide-two-column--split-title .guide-two-column__main,
-    .guide-two-column--split-title .guide-two-column__main :global(main) {
-      display: contents;
-    }
-
-    .guide-two-column--split-title .guide-two-column__main :global(main > .content-panel:first-of-type) {
-      grid-column: 1 / -1;
-    }
-
-    .guide-two-column--split-title .guide-two-column__main :global(main > .content-panel + .content-panel) {
-      grid-column: 1;
-    }
-
-    .guide-two-column--split-title .guide-two-column__sidebar {
-      grid-column: 2;
-      grid-row: 2;
-    }
   }
 </style>

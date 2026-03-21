@@ -2,6 +2,7 @@
 import GuideHeroVideo from '../guides/GuideHeroVideo.svelte';
 import LumenLogo from '../LumenLogo.astro';
 import BobbingText from '../BobbingText.astro';
+import Button from '../Button.svelte';
 import { getCollection } from 'astro:content';
 
 const route = Astro.locals.starlightRoute;
@@ -51,17 +52,15 @@ const chapterItems = siblingEntries.map((entry, index) => ({
           <div class="guide-page-title__hero-lines">
             {heroLines.map((line) => <BobbingText text={line} variant="guide" />)}
           </div>
+          <Button client:load href="https://submit.hackclub.com/hackcraft-lumen">
+            Submit your shader
+          </Button>
         </div>
       </div>
     )
   }
 
   <div class="guide-page-title__intro">
-    <div class="guide-page-title__intro-head">
-      <h1 id="_top">{title}</h1>
-      {subtitle && <p class="guide-page-title__subtitle">{subtitle}</p>}
-    </div>
-
     {
       chapterItems.length > 0 && (
         <nav class="guide-page-title__chapters" aria-label="Guide chapters">
@@ -86,7 +85,7 @@ const chapterItems = siblingEntries.map((entry, index) => ({
 <style>
   .guide-page-title {
     display: grid;
-    grid-template-rows: minmax(18rem, 50svh) auto;
+    grid-template-rows: minmax(24rem, 62svh) auto;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     background:
       linear-gradient(180deg, rgba(12, 9, 16, 0.82), rgba(12, 9, 16, 0.98)),
@@ -109,8 +108,7 @@ const chapterItems = siblingEntries.map((entry, index) => ({
     z-index: 1;
     display: grid;
     gap: 1.15rem;
-    width: min(100%, 44rem);
-    max-width: 42rem;
+    width: 100%;
     align-content: center;
     justify-items: center;
     text-align: center;
@@ -134,6 +132,7 @@ const chapterItems = siblingEntries.map((entry, index) => ({
   .guide-page-title__intro {
     display: grid;
     gap: 1.5rem;
+    justify-items: center;
     margin-inline: clamp(1rem, 3vw, 2rem);
     margin-bottom: clamp(1rem, 3vw, 2rem);
     padding-block: clamp(1.5rem, 3vw, 2.75rem);
@@ -148,36 +147,11 @@ const chapterItems = siblingEntries.map((entry, index) => ({
     grid-template-rows: auto;
   }
 
-  .guide-page-title__intro-head {
-    display: grid;
-    gap: 1.5rem;
-    max-width: 40rem;
-  }
-
-  h1 {
-    margin: 0;
-    color: #fff7ef;
-    font-family: var(--guide-serif);
-    font-size: clamp(2.5rem, 5vw, 4.75rem);
-    line-height: 0.95;
-    letter-spacing: -0.03em;
-    text-wrap: balance;
-  }
-
-  .guide-page-title__subtitle {
-    margin: 0;
-    color: rgba(255, 240, 232, 0.94);
-    font-family: var(--guide-serif);
-    font-size: clamp(1.05rem, 1.8vw, 1.35rem);
-    font-weight: 400;
-    line-height: 1.5;
-    text-wrap: balance;
-  }
-
   .guide-page-title__chapters {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
     gap: 0.9rem;
+    width: 100%;
   }
 
   .guide-page-title__chapter {
@@ -226,6 +200,7 @@ const chapterItems = siblingEntries.map((entry, index) => ({
 
   @media (max-width: 40rem) {
     .guide-page-title {
+      grid-template-rows: minmax(22rem, 58svh) auto;
       border-radius: 0 0 1rem 1rem;
     }
 
