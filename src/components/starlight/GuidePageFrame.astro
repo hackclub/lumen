@@ -55,7 +55,7 @@
     white-space: pre-wrap;
   }
 
-  .guide-page-frame :global(.sl-markdown-content img:not([style*="display: inline-block"])) {
+  .guide-page-frame :global(.sl-markdown-content img:not([style*="display: inline-block"]):not(:where(.not-content *))) {
     display: block;
     max-width: 100%;
     height: auto;
@@ -274,6 +274,7 @@
 
     const guideImages = Array.from(document.querySelectorAll('.sl-markdown-content img')).filter((image) => {
       if (!(image instanceof HTMLImageElement)) return false;
+      if (image.closest('.not-content')) return false;
       return image.style.display !== 'inline-block';
     });
 

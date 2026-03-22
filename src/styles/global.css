@@ -260,7 +260,7 @@ body {
 
 .button-pop-wrap {
 	transform: scale(0);
-	animation: logo-pop 0.3s steps(6) 0.25s forwards;
+	animation: logo-pop 0.3s steps(6) var(--button-pop-delay, 0.25s) forwards;
 	animation-play-state: paused;
 }
 

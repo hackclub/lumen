@@ -24,7 +24,10 @@ import BobbingText from "../components/BobbingText.astro";
         class="mt-4"
       />
 
-      <Button client:load href="https://submit.hackclub.com/hackcraft-lumen">Submit your shader</Button>
+      <div class="flex flex-col gap-2 mt-10">
+        <Button client:load href="https://submit.hackclub.com/hackcraft-lumen">Submit your shader</Button>
+        <Button client:load href="/guides" popDelay={0.4}>Read guide</Button>
+      </div>
     </div>
   </section>
 
@@ -106,7 +109,7 @@ import BobbingText from "../components/BobbingText.astro";
         as you've worked on all of them.
       </p>
 
-      <Button client:load href="https://submit.hackclub.com/hackcraft-lumen" bob>Submit your shader</Button>
+      <Button client:load class="mt-16" href="https://submit.hackclub.com/hackcraft-lumen" bob>Submit your shader</Button>
     </div>
   </section>
 </main>

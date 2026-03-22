@@ -3,10 +3,12 @@
 
   export let href = '#';
   export let bob = false;
+  export let popDelay = 0.25;
   let cls = '';
   export { cls as class };
 
   let wrap;
+  $: isExternal = /^(?:[a-z]+:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:');
 
   onMount(() => {
     if (wrap) {
@@ -15,11 +17,15 @@
   });
 </script>
 
-<div class="button-pop-wrap" bind:this={wrap}>
+<div
+  class="button-pop-wrap not-content"
+  bind:this={wrap}
+  style={`--button-pop-delay: ${popDelay}s;`}
+>
   <a
     {href}
-    target="_blank"
-    rel="noreferrer"
+    target={isExternal ? '_blank' : undefined}
+    rel={isExternal ? 'noreferrer' : undefined}
     class="button-pop {cls}"
     class:bobbing={bob}
   >
@@ -59,9 +65,8 @@
   .button-pop-wrap {
     display: flex;
     justify-content: center;
-    margin-top: 2rem;
     transform: scale(0);
-    animation: logo-pop 0.3s steps(6) 0.25s forwards;
+    animation: logo-pop 0.3s steps(6) var(--button-pop-delay, 0.25s) forwards;
     animation-play-state: paused;
   }
 
