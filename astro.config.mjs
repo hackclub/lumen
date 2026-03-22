@@ -4,6 +4,7 @@ import node from '@astrojs/node';
 import starlight from '@astrojs/starlight';
 import svelte from '@astrojs/svelte';
 import tailwindcss from '@tailwindcss/vite';
+import { remarkCodeFilenames } from './src/plugins/remark-code-filenames.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,13 +12,16 @@ export default defineConfig({
   adapter: node({
     mode: 'standalone'
   }),
+  markdown: {
+    remarkPlugins: [remarkCodeFilenames]
+  },
   integrations: [
     starlight({
       title: 'Lumen Guides',
       description: 'Guides for building Minecraft shaders with Lumen.',
       disable404Route: true,
       pagefind: false,
-      pagination: false,
+      pagination: true,
       tableOfContents: {
         minHeadingLevel: 2,
         maxHeadingLevel: 4
