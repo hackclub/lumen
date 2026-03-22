@@ -7,12 +7,37 @@
   let ready = $state(false);
   let rafId = 0;
   let lastSeekTime = 0;
+  let initialSyncRafId = 0;
 
   const LERP_FACTOR = 0.3;
   const FIREFOX_SEEK_INTERVAL = 17;
 
   const lerp = (start: number, end: number, factor: number) => {
     return start + (end - start) * factor;
+  };
+
+  const syncVideoToScroll = (immediate = false) => {
+    if (!ready || !videoEl?.duration) return;
+
+    const scrollY = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = maxScroll > 0 ? Math.min(Math.max(scrollY / maxScroll, 0), 1) : 0;
+
+    targetTime = progress * videoEl.duration;
+
+    if (immediate) {
+      currentTime = targetTime;
+      videoEl.currentTime = currentTime;
+    }
+  };
+
+  const queueInitialScrollSync = () => {
+    requestAnimationFrame(() => {
+      syncVideoToScroll(true);
+      initialSyncRafId = requestAnimationFrame(() => {
+        syncVideoToScroll(true);
+      });
+    });
   };
 
   const forceFullBuffer = async (video: HTMLVideoElement) => {
@@ -27,17 +52,12 @@
 
     video.currentTime = 0;
     ready = true;
+    syncVideoToScroll(true);
+    queueInitialScrollSync();
   };
 
   const handleScroll = () => {
-    if (!ready || !videoEl?.duration) return;
-
-    const scrollY = window.scrollY;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    if (maxScroll <= 0) return;
-
-    const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
-    targetTime = progress * videoEl.duration;
+    syncVideoToScroll();
   };
 
   const animate = () => {
@@ -63,11 +83,16 @@
   onMount(() => {
     forceFullBuffer(videoEl);
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('load', queueInitialScrollSync);
+    window.addEventListener('pageshow', queueInitialScrollSync);
     rafId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('load', queueInitialScrollSync);
+      window.removeEventListener('pageshow', queueInitialScrollSync);
       cancelAnimationFrame(rafId);
+      cancelAnimationFrame(initialSyncRafId);
     };
   });
 </script>

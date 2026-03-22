@@ -7,213 +7,317 @@ import FAQQuestion from "../components/FAQQuestion.astro";
 import WidgetButton from "../components/WidgetButton.astro";
 import LumenLogo from "../components/LumenLogo.astro";
 import BobbingText from "../components/BobbingText.astro";
+import {
+  buildAssetHref,
+  buildCanonicalHref,
+  HOMEPAGE_DESCRIPTION,
+  HOMEPAGE_TITLE,
+  OG_BANNER_PATH,
+  SITE_TITLE
+} from "../utils/seo";
+
+const canonicalHref = buildCanonicalHref(Astro.url.pathname, Astro.site);
+const ogImageHref = buildAssetHref(OG_BANNER_PATH, Astro.site);
+const guidesHref = buildCanonicalHref("/guides", Astro.site);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${canonicalHref}#website`,
+      name: SITE_TITLE,
+      url: canonicalHref,
+      description: HOMEPAGE_DESCRIPTION,
+      inLanguage: "en-US"
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${canonicalHref}#webpage`,
+      url: canonicalHref,
+      name: SITE_TITLE,
+      description: HOMEPAGE_DESCRIPTION,
+      isPartOf: {
+        "@id": `${canonicalHref}#website`
+      },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: ogImageHref
+      },
+      significantLink: [guidesHref, "https://submit.hackclub.com/hackcraft-lumen"]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${canonicalHref}#faq`,
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "I don't know anything about shaders!",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Lumen includes beginner-friendly guides that walk you through making your first Minecraft shaders."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "What is Hackatime?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Hackatime tracks how much time you spent on your shader project so Lumen can verify your work."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "I have other questions!",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "You can ask questions in Hack Club's #mc-modding Slack channel for help with shaders and submissions."
+          }
+        },
+        {
+          "@type": "Question",
+          name: "How can I get a GPU?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "High-quality, creative shaderpacks with substantial effort are eligible for GPU prizes through Lumen."
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<ScrollVideo client:only="svelte" />
+<html lang="en">
+  <head>
+    <title>{HOMEPAGE_TITLE}</title>
+    <meta name="description" content={HOMEPAGE_DESCRIPTION} />
+    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+    <link rel="canonical" href={canonicalHref} />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:title" content={SITE_TITLE} />
+    <meta property="og:description" content={HOMEPAGE_DESCRIPTION} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalHref} />
+    <meta property="og:site_name" content={SITE_TITLE} />
+    <meta property="og:image" content={ogImageHref} />
+    <meta property="og:image:alt" content="Lumen banner showing the Minecraft-inspired Hack Club shader program branding." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={SITE_TITLE} />
+    <meta name="twitter:description" content={HOMEPAGE_DESCRIPTION} />
+    <meta name="twitter:image" content={ogImageHref} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  </head>
 
-<main class="relative">
-  <section class="flex h-screen items-center justify-center">
-    <div class="max-w-4xl text-center text-white">
-      <div class="flex items-end justify-center cursor-pointer">
-        <LumenLogo variant="home" interactive showHackclubBadge />
-      </div>
+  <body>
+    <ScrollVideo client:only="svelte" />
 
-      <BobbingText
-        text="Make Minecraft shaders, get Minecraft and GPUs!"
-        variant="home"
-        class="mt-4"
-      />
+    <main class="relative">
+      <header class="flex h-screen items-center justify-center">
+        <div class="max-w-4xl text-center text-white">
+          <h1 class="sr-only">Hack Club Lumen helps you learn Minecraft shader development and submit your shaderpack for prizes.</h1>
+          <div class="flex items-end justify-center cursor-pointer">
+            <LumenLogo variant="home" interactive showHackclubBadge />
+          </div>
 
-      <div class="flex flex-col gap-2 mt-10">
-        <Button client:load href="https://submit.hackclub.com/hackcraft-lumen">Submit your shader</Button>
-        <Button client:load href="/guides" popDelay={0.4}>Read guide</Button>
-      </div>
-    </div>
-  </section>
+          <BobbingText
+            text="Make Minecraft shaders, get Minecraft and GPUs!"
+            variant="home"
+            class="mt-4"
+          />
 
-  <section class="flex items-center justify-center pb-32">
-    <div class="max-w-6xl text-center text-white">
-      <h2 class="section-title" data-text="What's Lumen...?">What's Lumen...?</h2>
-      <p class="mt-6 leading-relaxed text-[#E95B5F] text-3xl minecraft-text">
-        Lumen is a Hack Club YSWS where you ship a shaderpack, and get Minecraft! The authors of the best shaderpacks can get any GPU up to an RTX 5060 Ti (or equivalent). 
-      </p>
-    </div>
-  </section>
+          <div class="flex flex-col gap-2 mt-10">
+            <Button client:load href="https://submit.hackclub.com/hackcraft-lumen">Submit your shader</Button>
+            <Button client:load href="/guides" popDelay={0.4}>Read guide</Button>
+          </div>
+        </div>
+      </header>
 
-  <section class="flex h-screen items-center justify-center plank-box-section" style="perspective: 1200px; transform-style: preserve-3d;">
-    <Sign x={-500} y={-300} z={0} rotateX={0} rotateY={0} rotateZ={0} initialRotation={[60, -70, 0]} finalRotation={[0, 50, 0]} bobDelay={0} finalScrollY={1500} href="https://hackatime.hackclub.com">
-      <p class="section-body text-lg text-center leading-relaxed">
-        <b class="minecraft-bold">STEP 1</b> </br>
-        Set up Hackatime to track your time!
-      </p>
-    </Sign>
+      <section class="flex items-center justify-center pb-32">
+        <div class="max-w-6xl text-center text-white">
+          <h2 class="section-title" data-text="What's Lumen...?">What's Lumen...?</h2>
+          <p class="mt-6 leading-relaxed text-[#E95B5F] text-3xl minecraft-text">
+            Lumen is a Hack Club YSWS where you ship a shaderpack, and get Minecraft! The authors of the best shaderpacks can get any GPU up to an RTX 5060 Ti (or equivalent). 
+          </p>
+        </div>
+      </section>
 
-    <Sign x={600} y={-100} z={0} rotateX={0} rotateY={0} rotateZ={0} initialRotation={[15, 25, -8]} finalRotation={[0, -50, 0]} bobDelay={1.2} finalScrollY={1500} href="/guides">
-      <p class="section-body text-lg text-center leading-relaxed">
-        <b class="minecraft-bold">STEP 2</b> </br>
-        Make the shaders of your dreams by following our guides!
-      </p>
-    </Sign>
+      <section class="flex h-screen items-center justify-center plank-box-section" style="perspective: 1200px; transform-style: preserve-3d;">
+        <Sign x={-500} y={-300} z={0} rotateX={0} rotateY={0} rotateZ={0} initialRotation={[60, -70, 0]} finalRotation={[0, 50, 0]} bobDelay={0} finalScrollY={1500} href="https://hackatime.hackclub.com">
+          <p class="section-body text-lg text-center leading-relaxed">
+            <b class="minecraft-bold">STEP 1</b> </br>
+            Set up Hackatime to track your time!
+          </p>
+        </Sign>
 
-    <Sign x={-500} y={300} z={0} rotateX={0} rotateY={0} rotateZ={0} initialRotation={[100, 25, -80]} finalRotation={[0, 50, 0]} bobDelay={1.5} finalScrollY={2000} href="https://modrinth.com">
-      <p class="section-body text-lg text-center leading-relaxed">
-        <b class="minecraft-bold">STEP 3</b> </br>
-        Publish your shader on Modrinth!
-      </p>
-    </Sign>
+        <Sign x={600} y={-100} z={0} rotateX={0} rotateY={0} rotateZ={0} initialRotation={[15, 25, -8]} finalRotation={[0, -50, 0]} bobDelay={1.2} finalScrollY={1500} href="/guides">
+          <p class="section-body text-lg text-center leading-relaxed">
+            <b class="minecraft-bold">STEP 2</b> </br>
+            Make the shaders of your dreams by following our guides!
+          </p>
+        </Sign>
 
-    <Sign x={500} y={600} z={0} rotateX={0} rotateY={0} rotateZ={0} initialRotation={[30, 25, -8]} finalRotation={[0, -50, 0]} bobDelay={1.5} finalScrollY={2000} href="https://submit.hackclub.com/hackcraft-lumen">
-      <p class="section-body text-lg text-center leading-relaxed">
-        <b class="minecraft-bold">STEP 4</b> </br>
-        Get Minecraft and work towards a GPU!
-      </p>
-    </Sign>
-  </section>
+        <Sign x={-500} y={300} z={0} rotateX={0} rotateY={0} rotateZ={0} initialRotation={[100, 25, -80]} finalRotation={[0, 50, 0]} bobDelay={1.5} finalScrollY={2000} href="https://modrinth.com">
+          <p class="section-body text-lg text-center leading-relaxed">
+            <b class="minecraft-bold">STEP 3</b> </br>
+            Publish your shader on Modrinth!
+          </p>
+        </Sign>
 
-  <section class="flex items-center justify-center">
-    <div class="max-w-4xl w-full text-white px-6 pt-128">
-      <h2 class="section-title text-center !text-6xl mb-16" data-text="FAQ">FAQ</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FAQQuestion question="I don't know anything about shaders!">
-          That's not a question - but you're in luck! We crafted guides specifically for Lumen to get you started.
+        <Sign x={500} y={600} z={0} rotateX={0} rotateY={0} rotateZ={0} initialRotation={[30, 25, -8]} finalRotation={[0, -50, 0]} bobDelay={1.5} finalScrollY={2000} href="https://submit.hackclub.com/hackcraft-lumen">
+          <p class="section-body text-lg text-center leading-relaxed">
+            <b class="minecraft-bold">STEP 4</b> </br>
+            Get Minecraft and work towards a GPU!
+          </p>
+        </Sign>
+      </section>
 
-          <WidgetButton client:load href="/guides">Read the guide</Button>
-        </FAQQuestion>
+      <section class="flex items-center justify-center">
+        <div class="max-w-4xl w-full text-white px-6 pt-128">
+          <h2 class="section-title text-center !text-6xl mb-16" data-text="FAQ">FAQ</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FAQQuestion question="I don't know anything about shaders!">
+              That's not a question - but you're in luck! We crafted guides specifically for Lumen to get you started.
 
-        <FAQQuestion question="What is Hackatime?">
-          Hackatime is our tool to track how much time you've spent on your project. We use this to verify that you've put
-          in the effort to make your shader.
+              <WidgetButton client:load href="/guides">Read the guide</Button>
+            </FAQQuestion>
 
-          <WidgetButton client:load href="https://hackatime.hackclub.com/signin">Set up Hackatime</Button>
-        </FAQQuestion>
+            <FAQQuestion question="What is Hackatime?">
+              Hackatime is our tool to track how much time you've spent on your project. We use this to verify that you've put
+              in the effort to make your shader.
 
-        <FAQQuestion question="I have other questions!">
-          Join our channel (<a target="_blank" class="text-blue-700" href="https://app.slack.com/client/T0266FRGM/C07NQ5QAYNQ">#mc-modding</a>) on Hack Club's Slack!
-          We're there to answer any questions, help you out with your shaders, and chat about shaders.
-        </FAQQuestion>
+              <WidgetButton client:load href="https://hackatime.hackclub.com/signin">Set up Hackatime</Button>
+            </FAQQuestion>
 
-        <FAQQuestion question="How can I get a GPU?">
-          Shaderpacks that are high quality, creative, and have a lot of time put into them are eligible.
-          We'll give you feedback on how to improve your shaderpack to get a GPU!
-        </FAQQuestion>
-      </div>
-    </div>
-  </section>
+            <FAQQuestion question="I have other questions!">
+              Join our channel (<a target="_blank" class="text-blue-700" href="https://app.slack.com/client/T0266FRGM/C07NQ5QAYNQ">#mc-modding</a>) on Hack Club's Slack!
+              We're there to answer any questions, help you out with your shaders, and chat about shaders.
+            </FAQQuestion>
 
-  <section class="flex h-screen items-center justify-center">
+            <FAQQuestion question="How can I get a GPU?">
+              Shaderpacks that are high quality, creative, and have a lot of time put into them are eligible.
+              We'll give you feedback on how to improve your shaderpack to get a GPU!
+            </FAQQuestion>
+          </div>
+        </div>
+      </section>
 
-    <div class="max-w-4xl text-center text-white">
-      <h2 class="section-title" data-text="Ready to submit?">Ready to submit?</h2>
-      <p class="leading-relaxed text-[#E95B5F] text-2xl minecraft-text mt-6">
-        Make sure you tracked your time with Hackatime before submitting! You can submit as many shaderpacks as you'd like, as long
-        as you've worked on all of them.
-      </p>
+      <section class="flex h-screen items-center justify-center">
 
-      <Button client:load class="mt-16" href="https://submit.hackclub.com/hackcraft-lumen" bob>Submit your shader</Button>
-    </div>
-  </section>
-</main>
+        <div class="max-w-4xl text-center text-white">
+          <h2 class="section-title" data-text="Ready to submit?">Ready to submit?</h2>
+          <p class="leading-relaxed text-[#E95B5F] text-2xl minecraft-text mt-6">
+            Make sure you tracked your time with Hackatime before submitting! You can submit as many shaderpacks as you'd like, as long
+            as you've worked on all of them.
+          </p>
 
-<script>
-  const buttonPopWrap = document.querySelector<HTMLElement>(".button-pop-wrap");
+          <Button client:load class="mt-16" href="https://submit.hackclub.com/hackcraft-lumen" bob>Submit your shader</Button>
+        </div>
+      </section>
+    </main>
 
-  window.addEventListener("load", () => {
-    if (buttonPopWrap) buttonPopWrap.style.animationPlayState = "running";
-  });
+    <script>
+      const buttonPopWrap = document.querySelector<HTMLElement>(".button-pop-wrap");
 
-  // Lighting setup
-  const keyLight = { x: 0.4, y: -0.5, z: 0.7 };
-  const kLen = Math.sqrt(keyLight.x ** 2 + keyLight.y ** 2 + keyLight.z ** 2);
-  keyLight.x /= kLen; keyLight.y /= kLen; keyLight.z /= kLen;
+      window.addEventListener("load", () => {
+        if (buttonPopWrap) buttonPopWrap.style.animationPlayState = "running";
+      });
 
-  const fillLight = { x: -0.3, y: 0.6, z: 0.4 };
-  const fLen = Math.sqrt(fillLight.x ** 2 + fillLight.y ** 2 + fillLight.z ** 2);
-  fillLight.x /= fLen; fillLight.y /= fLen; fillLight.z /= fLen;
+      // Lighting setup
+      const keyLight = { x: 0.4, y: -0.5, z: 0.7 };
+      const kLen = Math.sqrt(keyLight.x ** 2 + keyLight.y ** 2 + keyLight.z ** 2);
+      keyLight.x /= kLen; keyLight.y /= kLen; keyLight.z /= kLen;
 
-  type Vec3 = { x: number; y: number; z: number };
-  const faceNormals: Record<string, Vec3> = {
-    "plank-front":  { x:  0, y:  0, z:  1 },
-    "plank-back":   { x:  0, y:  0, z: -1 },
-    "plank-top":    { x:  0, y: -1, z:  0 },
-    "plank-bottom": { x:  0, y:  1, z:  0 },
-    "plank-left":   { x: -1, y:  0, z:  0 },
-    "plank-right":  { x:  1, y:  0, z:  0 },
-    "stem-front":   { x:  0, y:  0, z:  1 },
-    "stem-back":    { x:  0, y:  0, z: -1 },
-    "stem-left":    { x: -1, y:  0, z:  0 },
-    "stem-right":   { x:  1, y:  0, z:  0 },
-    "stem-bottom":  { x:  0, y:  1, z:  0 },
-  };
+      const fillLight = { x: -0.3, y: 0.6, z: 0.4 };
+      const fLen = Math.sqrt(fillLight.x ** 2 + fillLight.y ** 2 + fillLight.z ** 2);
+      fillLight.x /= fLen; fillLight.y /= fLen; fillLight.z /= fLen;
 
-  function rotateNormal(n: Vec3, rx: number, ry: number) {
-    const cosX = Math.cos(rx), sinX = Math.sin(rx);
-    const cosY = Math.cos(ry), sinY = Math.sin(ry);
-    const y1 = n.y * cosX - n.z * sinX;
-    const z1 = n.y * sinX + n.z * cosX;
-    const x2 = n.x * cosY + z1 * sinY;
-    const z2 = -n.x * sinY + z1 * cosY;
-    return { x: x2, y: y1, z: z2 };
-  }
-
-  function applyLighting(sign: HTMLElement, rxDeg: number, ryDeg: number) {
-    const rx = rxDeg * Math.PI / 180;
-    const ry = ryDeg * Math.PI / 180;
-    for (const [cls, normal] of Object.entries(faceNormals)) {
-      const el = sign.querySelector<HTMLElement>(`.${cls}`);
-      if (!el) continue;
-      const n = rotateNormal(normal, rx, ry);
-      const keyDot = Math.max(0, n.x * keyLight.x + n.y * keyLight.y + n.z * keyLight.z);
-      const fillDot = Math.max(0, n.x * fillLight.x + n.y * fillLight.y + n.z * fillLight.z);
-      const brightness = 0.5 + 0.5 * keyDot + 0.2 * fillDot;
-      const purple = fillDot * 0.15;
-      el.style.filter = `brightness(${brightness}) saturate(${1 + purple * 0.5}) hue-rotate(${purple * 30}deg)`;
-    }
-  }
-
-  // Scroll-driven rotation for each sign section (lerped)
-  document.querySelectorAll<HTMLElement>(".plank-box-section").forEach((section) => {
-    const signs = section.querySelectorAll<HTMLElement>(".sign");
-    const lerpFactor = 0.08;
-
-    const signStates = Array.from(signs).map((sign) => {
-      const state = {
-        sign,
-        box: sign.querySelector<HTMLElement>(".plank-box"),
-        initial: JSON.parse(sign.dataset.initial || "[0,0,0]") as [number, number, number],
-        final: JSON.parse(sign.dataset.final || "[0,0,0]") as [number, number, number],
-        finalScroll: parseFloat(sign.dataset.finalScroll || "1000"),
-        current: [0, 0, 0] as [number, number, number],
-        initialized: false,
-        hovered: false,
+      type Vec3 = { x: number; y: number; z: number };
+      const faceNormals: Record<string, Vec3> = {
+        "plank-front":  { x:  0, y:  0, z:  1 },
+        "plank-back":   { x:  0, y:  0, z: -1 },
+        "plank-top":    { x:  0, y: -1, z:  0 },
+        "plank-bottom": { x:  0, y:  1, z:  0 },
+        "plank-left":   { x: -1, y:  0, z:  0 },
+        "plank-right":  { x:  1, y:  0, z:  0 },
+        "stem-front":   { x:  0, y:  0, z:  1 },
+        "stem-back":    { x:  0, y:  0, z: -1 },
+        "stem-left":    { x: -1, y:  0, z:  0 },
+        "stem-right":   { x:  1, y:  0, z:  0 },
+        "stem-bottom":  { x:  0, y:  1, z:  0 },
       };
-      sign.addEventListener("mouseenter", () => state.hovered = true);
-      sign.addEventListener("mouseleave", () => state.hovered = false);
-      return state;
-    });
 
-    function tick() {
-      requestAnimationFrame(tick);
-      for (const state of signStates) {
-        if (!state.box) continue;
-
-        const t = Math.max(0, Math.min(1, window.scrollY / state.finalScroll));
-        const targetX = state.hovered ? 0 : state.initial[0] + (state.final[0] - state.initial[0]) * t;
-        const targetY = state.hovered ? 0 : state.initial[1] + (state.final[1] - state.initial[1]) * t;
-        const targetZ = state.hovered ? 0 : state.initial[2] + (state.final[2] - state.initial[2]) * t;
-
-        if (!state.initialized) {
-          state.current = [targetX, targetY, targetZ];
-          state.initialized = true;
-        } else {
-          state.current[0] += (targetX - state.current[0]) * lerpFactor;
-          state.current[1] += (targetY - state.current[1]) * lerpFactor;
-          state.current[2] += (targetZ - state.current[2]) * lerpFactor;
-        }
-
-        state.box.style.transform = `rotateX(${state.current[0]}deg) rotateY(${state.current[1]}deg) rotateZ(${state.current[2]}deg)`;
-        applyLighting(state.sign, state.current[0], state.current[1]);
+      function rotateNormal(n: Vec3, rx: number, ry: number) {
+        const cosX = Math.cos(rx), sinX = Math.sin(rx);
+        const cosY = Math.cos(ry), sinY = Math.sin(ry);
+        const y1 = n.y * cosX - n.z * sinX;
+        const z1 = n.y * sinX + n.z * cosX;
+        const x2 = n.x * cosY + z1 * sinY;
+        const z2 = -n.x * sinY + z1 * cosY;
+        return { x: x2, y: y1, z: z2 };
       }
-    }
-    tick();
-  });
-</script>
+
+      function applyLighting(sign: HTMLElement, rxDeg: number, ryDeg: number) {
+        const rx = rxDeg * Math.PI / 180;
+        const ry = ryDeg * Math.PI / 180;
+        for (const [cls, normal] of Object.entries(faceNormals)) {
+          const el = sign.querySelector<HTMLElement>(`.${cls}`);
+          if (!el) continue;
+          const n = rotateNormal(normal, rx, ry);
+          const keyDot = Math.max(0, n.x * keyLight.x + n.y * keyLight.y + n.z * keyLight.z);
+          const fillDot = Math.max(0, n.x * fillLight.x + n.y * fillLight.y + n.z * fillLight.z);
+          const brightness = 0.5 + 0.5 * keyDot + 0.2 * fillDot;
+          const purple = fillDot * 0.15;
+          el.style.filter = `brightness(${brightness}) saturate(${1 + purple * 0.5}) hue-rotate(${purple * 30}deg)`;
+        }
+      }
+
+      // Scroll-driven rotation for each sign section (lerped)
+      document.querySelectorAll<HTMLElement>(".plank-box-section").forEach((section) => {
+        const signs = section.querySelectorAll<HTMLElement>(".sign");
+        const lerpFactor = 0.08;
+
+        const signStates = Array.from(signs).map((sign) => {
+          const state = {
+            sign,
+            box: sign.querySelector<HTMLElement>(".plank-box"),
+            initial: JSON.parse(sign.dataset.initial || "[0,0,0]") as [number, number, number],
+            final: JSON.parse(sign.dataset.final || "[0,0,0]") as [number, number, number],
+            finalScroll: parseFloat(sign.dataset.finalScroll || "1000"),
+            current: [0, 0, 0] as [number, number, number],
+            initialized: false,
+            hovered: false,
+          };
+          sign.addEventListener("mouseenter", () => state.hovered = true);
+          sign.addEventListener("mouseleave", () => state.hovered = false);
+          return state;
+        });
+
+        function tick() {
+          requestAnimationFrame(tick);
+          for (const state of signStates) {
+            if (!state.box) continue;
+
+            const t = Math.max(0, Math.min(1, window.scrollY / state.finalScroll));
+            const targetX = state.hovered ? 0 : state.initial[0] + (state.final[0] - state.initial[0]) * t;
+            const targetY = state.hovered ? 0 : state.initial[1] + (state.final[1] - state.initial[1]) * t;
+            const targetZ = state.hovered ? 0 : state.initial[2] + (state.final[2] - state.initial[2]) * t;
+
+            if (!state.initialized) {
+              state.current = [targetX, targetY, targetZ];
+              state.initialized = true;
+            } else {
+              state.current[0] += (targetX - state.current[0]) * lerpFactor;
+              state.current[1] += (targetY - state.current[1]) * lerpFactor;
+              state.current[2] += (targetZ - state.current[2]) * lerpFactor;
+            }
+
+            state.box.style.transform = `rotateX(${state.current[0]}deg) rotateY(${state.current[1]}deg) rotateZ(${state.current[2]}deg)`;
+            applyLighting(state.sign, state.current[0], state.current[1]);
+          }
+        }
+        tick();
+      });
+    </script>
+  </body>
+</html>

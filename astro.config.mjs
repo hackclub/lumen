@@ -8,6 +8,7 @@ import { remarkCodeFilenames } from './src/plugins/remark-code-filenames.mjs';
 
 // https://astro.build/config
 export default defineConfig({
+  site: process.env.PUBLIC_SITE_URL || process.env.SITE_URL,
   output: 'server',
   adapter: node({
     mode: 'standalone'
@@ -19,9 +20,21 @@ export default defineConfig({
     starlight({
       title: 'Lumen Guides',
       description: 'Guides for building Minecraft shaders with Lumen.',
+      favicon: '/favicon.ico',
       disable404Route: true,
       pagefind: false,
       pagination: true,
+      head: [
+        {
+          tag: 'link',
+          attrs: {
+            rel: 'icon',
+            href: '/favicon.png',
+            type: 'image/png',
+            sizes: '32x32'
+          }
+        }
+      ],
       tableOfContents: {
         minHeadingLevel: 2,
         maxHeadingLevel: 4
@@ -37,6 +50,7 @@ export default defineConfig({
       ],
       customCss: ['/src/styles/starlight.css'],
       components: {
+        Head: './src/components/starlight/GuideHead.astro',
         PageFrame: './src/components/starlight/GuidePageFrame.astro',
         TwoColumnContent: './src/components/starlight/GuideTwoColumnContent.astro',
         PageTitle: './src/components/starlight/GuidePageTitle.astro',

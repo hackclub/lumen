@@ -4,20 +4,25 @@ import LumenLogo from '../LumenLogo.astro';
 import BobbingText from '../BobbingText.astro';
 import Button from '../Button.svelte';
 import { getCollection } from 'astro:content';
+import { extractGuideDescription } from '../../utils/seo';
 
 const route = Astro.locals.starlightRoute;
 const title = route.entry.data.title;
 const subtitle = route.entry.data.subtitle?.trim();
 const summary =
+  extractGuideDescription(route.entry.body, route.entry.data.description, 1) ??
+  route.entry.data.description ??
+  'Follow this chapter to keep building your Minecraft shaderpack.';
+const heroSummary =
   route.entry.data.hero?.tagline ??
   route.entry.data.description ??
-  'Placeholder intro copy for this guide. Replace this with the final overview when the chapter is ready.';
+  summary;
 const pathParts = route.id.split('/');
 const currentSlug = pathParts.at(-1) ?? route.id;
 const directory = currentSlug === 'guides' ? 'guides' : pathParts.slice(0, -1).join('/');
 const isSeriesPage = route.id === directory || /^\d{2}-/.test(currentSlug);
 const showHero = route.id === 'guides/01-getting-oriented';
-const heroLines = showHero ? [subtitle, summary].filter(Boolean).slice(0, 2) : [];
+const heroLines = showHero ? [subtitle, heroSummary].filter(Boolean).slice(0, 2) : [];
 
 const siblingEntries = isSeriesPage
   ? (await getCollection('docs', ({ id, data }) => {
@@ -145,6 +150,18 @@ const chapterItems = siblingEntries.map((entry, index) => ({
 
   .guide-page-title--compact {
     grid-template-rows: auto;
+  }
+
+  .guide-page-title__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .guide-page-title__chapters {
