@@ -1,0 +1,127 @@
+---
+title: Getting Oriented
+subtitle: Let's make your very first shader!
+description: You can also submit your shader to Lumen for a prize.
+sidebar:
+  order: 1
+---
+
+import dedent from "dedent";
+
+import FragmentShaderEditor from '../../../components/guides/FragmentShaderEditor.svelte';
+import TextureFragmentShaderEditor from '../../../components/guides/TextureFragmentShaderEditor.svelte';
+import VertexShaderEditor from '../../../components/guides/VertexShaderEditor.svelte';
+
+export const cubeVertices = [
+  -1, -1,  1,   1, -1,  1,   1,  1,  1,
+  -1, -1,  1,   1,  1,  1,  -1,  1,  1,
+   1, -1, -1,  -1, -1, -1,  -1,  1, -1,
+   1, -1, -1,  -1,  1, -1,   1,  1, -1,
+  -1, -1, -1,  -1, -1,  1,  -1,  1,  1,
+  -1, -1, -1,  -1,  1,  1,  -1,  1, -1,
+   1, -1,  1,   1, -1, -1,   1,  1, -1,
+   1, -1,  1,   1,  1, -1,   1,  1,  1,
+  -1,  1,  1,   1,  1,  1,   1,  1, -1,
+  -1,  1,  1,   1,  1, -1,  -1,  1, -1,
+  -1, -1, -1,   1, -1, -1,   1, -1,  1,
+  -1, -1, -1,   1, -1,  1,  -1, -1,  1
+];
+
+This guide is a gentle step-by-step introduction into the world of Minecraft shaderpacks. You'll learn how to create a shader like this:
+
+<video src="/img/guide/01/final.mp4" loop autoPlay muted style="width: 100%; border-radius: 16px;" />
+
+Fundamentally, a shader is just a program that tells your GPU what to do.
+
+Here is a **fragment shader**. For each pixel (or, *fragment*), the `mainImage` function determines what color to give it! We'll keep it simple, and just set it to red for all pixels.
+
+<FragmentShaderEditor
+  client:load
+  source={dedent`
+    // Mess around with this! This is editable!
+    void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+      // vec4 = "vector of 4 components"; red, green, blue, alpha (transparency)
+      fragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }`
+  }
+/>
+
+We are given the **current pixel coordinate**, and we are expected to provide **a color for it**.
+
+This is GLSL - the **OpenGL Shading Language**. This is the language we will be using to write our shaders! We'll be learning more about it as we go on. During this guide, you'll notice a couple of sandboxes like the one above. I encourage you to mess around with them!
+
+In fragment shaders, we usually also have access to at least one **texture**. Here's an example of a silly kitty being passed as our texture. We multiply all pixel values by 2x, making it twice as bright!
+
+<TextureFragmentShaderEditor
+  client:load
+  defaultTextureUrl="/img/kitty.jpg"
+  source={dedent`
+    void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+      // fragCoord is currently a value in the range of (0, 0) to (width, height).
+      // By dividing it by (width, height), we turn it into a value in the range of (0.0, 0.0) to (1.0, 1.0)!
+      // This is pretty handy, as this coordinate will now work with a texture of any resolution.
+      vec2 uv = fragCoord / iResolution.xy;
+
+      // Now - we check what pixel is in the texture.
+      // In GLSL, texture2D takes a texture and a coordinate, and gives us the pixel that resides there.
+      // The coordinate it expects is in the range of (0.0, 0.0) to (1.0, 1.0), which we got above!
+      vec3 sampled = texture2D(colortex0, uv).rgb;
+
+      // Let's make it twice as bright!
+      vec3 brighter = sampled * 2.0;
+
+      fragColor = vec4(brighter, 1.0);
+    }`
+  }
+/>
+
+The GPU can only draw **triangles**, which are defined by their points - or, vertices. With multiple triangles we can form polygons, and with polygons, we can draw any shape!
+
+These vertices can be processed by **vertex shaders**. It works exactly the same as a fragment shader, but instead of putting a texture coordinate in and getting a pixel color back, we put in a **vertex** coordinate (point) in, and getting the final result back!
+
+<VertexShaderEditor
+  client:load
+  vertices={cubeVertices}
+  autoSpin={true}
+  wireframe={true}
+  source={dedent`
+    void mainVertex(inout vec3 position, inout vec3 normal) {
+      // Mess around with this! Here, we set the scale according to a sine wave.
+      float scale = (sin(iTime) / 4.0) + 0.5;
+
+      // Try adding, dividing, and other crazy stuff!
+      position = position * scale;
+    }`
+  }
+/>
+
+Among other things, we can use vertex shaders to, for example, simulate waving leaves and grass.
+
+<VertexShaderEditor
+  client:load
+  vertices={cubeVertices}
+  autoSpin={false}
+  defaultTextureUrl="/img/leaves-512.png"
+  source={dedent`
+    void mainVertex(inout vec3 position, inout vec3 normal) {
+      // Convert the leaf height from the range -1.0..1.0 into 0.0..1.0.
+      float height = (position.y + 1.0) / 2.0;
+
+      // We still want the bottom face to move a little bit, but the top should wiggle more.
+      float movementAmount = 0.35 + height * 0.65;
+
+      // We offset the animation time depending on the position of the vertex.
+      float offsetX = position.y * 1.8 + position.z * 0.9;
+      float offsetZ = position.y * 1.5 + position.x * 1.0;
+
+      // Use sine and cosine waves to push the leaves side to side.
+      float swayX = sin((iTime * 1.8) + offsetX) * 0.11;
+      float swayZ = cos((iTime * 1.5) + offsetZ) * 0.09;
+
+      position.x += swayX * movementAmount;
+      position.z += swayZ * movementAmount;
+    }`
+  }
+/>
+
+Let's move on to the next chapter, where we will set up everything we need to make our first shader.

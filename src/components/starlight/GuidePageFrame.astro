@@ -1,0 +1,359 @@
+<div class="guide-page-frame">
+  <slot />
+</div>
+
+<div class="guide-image-viewer" data-guide-image-viewer hidden>
+  <div class="guide-image-viewer__toolbar" aria-label="Image controls">
+    <button type="button" class="guide-image-viewer__button" data-guide-image-action="zoom-out" aria-label="Zoom out">
+      -
+    </button>
+    <button type="button" class="guide-image-viewer__button" data-guide-image-action="zoom-in" aria-label="Zoom in">
+      +
+    </button>
+    <button type="button" class="guide-image-viewer__button" data-guide-image-action="close" aria-label="Close image viewer">
+      x
+    </button>
+  </div>
+
+  <div class="guide-image-viewer__viewport" data-guide-image-viewport>
+    <img class="guide-image-viewer__image" data-guide-image-element alt="" />
+  </div>
+</div>
+
+<style>
+  .guide-page-frame {
+    min-height: 100vh;
+  }
+
+  .guide-page-frame :global(.sl-markdown-content .mermaid-diagram) {
+    margin-block: 2rem;
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+      rgba(255, 255, 255, 0.03);
+    overflow-x: auto;
+  }
+
+  .guide-page-frame :global(.sl-markdown-content .mermaid-diagram svg) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .guide-page-frame :global(.sl-markdown-content .mermaid-diagram svg text),
+  .guide-page-frame :global(.sl-markdown-content .mermaid-diagram svg tspan),
+  .guide-page-frame :global(.sl-markdown-content .mermaid-diagram svg foreignObject),
+  .guide-page-frame :global(.sl-markdown-content .mermaid-diagram svg .label) {
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+
+  .guide-page-frame :global(.sl-markdown-content .mermaid-diagram--error) {
+    color: #ffd0bc;
+    white-space: pre-wrap;
+  }
+
+  .guide-page-frame :global(.sl-markdown-content img:not([style*="display: inline-block"]):not(:where(.not-content *))) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-block: 2rem;
+    margin-inline: auto;
+    cursor: zoom-in;
+  }
+
+  .guide-image-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(7, 4, 9, 0.88);
+    backdrop-filter: blur(10px);
+  }
+
+  .guide-image-viewer__toolbar {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+    display: flex;
+    gap: 0.625rem;
+  }
+
+  .guide-image-viewer__button {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(255, 247, 239, 0.25);
+    border-radius: 999px;
+    background: rgba(20, 15, 24, 0.9);
+    color: #fff7ef;
+    font: inherit;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+  }
+
+  .guide-image-viewer__button:hover {
+    border-color: rgba(255, 208, 188, 0.6);
+    background: rgba(38, 28, 45, 0.96);
+    transform: translateY(-1px);
+  }
+
+  .guide-image-viewer__viewport {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .guide-image-viewer__viewport.is-dragging {
+    cursor: grabbing;
+  }
+
+  .guide-image-viewer__image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: calc(100vw - 4rem);
+    max-height: calc(100vh - 4rem);
+    user-select: none;
+    -webkit-user-drag: none;
+    transform-origin: center center;
+    will-change: transform;
+  }
+
+  @media (max-width: 50rem) {
+    .guide-image-viewer__toolbar {
+      top: 0.75rem;
+      right: 0.75rem;
+    }
+
+    .guide-image-viewer__button {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+</style>
+
+<script>
+  import mermaid from 'mermaid';
+
+  const MERMAID_FONT_FAMILY = 'Arial, Helvetica, sans-serif';
+
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: 'strict',
+    theme: 'base',
+    fontFamily: MERMAID_FONT_FAMILY,
+    padding: 24,
+    themeVariables: {
+      background: '#130e17',
+      primaryColor: '#1d1522',
+      primaryTextColor: '#fff7ef',
+      primaryBorderColor: '#ffd0bc',
+      lineColor: '#e95b5f',
+      secondaryColor: '#22131e',
+      tertiaryColor: '#140f18',
+      clusterBkg: '#1d1522',
+      clusterBorder: '#ffd0bc',
+      fontFamily: MERMAID_FONT_FAMILY
+    },
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: false,
+      curve: 'basis'
+    }
+  });
+
+  const renderMermaidDiagrams = async () => {
+    const mermaidBlocks = Array.from(document.querySelectorAll('.expressive-code pre')).filter((node) => {
+      if (!(node instanceof HTMLElement)) return false;
+      const language = node.dataset.language ?? '';
+      return language.toLowerCase() === 'mermaid' || node.classList.contains('language-mermaid');
+    });
+
+    for (const block of mermaidBlocks) {
+      const frame = block.closest('.expressive-code');
+      const lines = Array.from(block.querySelectorAll('.ec-line'))
+        .map((line) => line.textContent ?? '')
+        .join('\n');
+      const source = (lines || block.textContent || '').trim();
+      if (!(frame instanceof HTMLElement) || !source) continue;
+      if (frame.nextElementSibling?.classList.contains('mermaid-diagram')) continue;
+
+      const diagram = document.createElement('div');
+      diagram.className = 'mermaid-diagram';
+      frame.insertAdjacentElement('afterend', diagram);
+      frame.hidden = true;
+
+      try {
+        const id = `mermaid-${crypto.randomUUID()}`;
+        const { svg } = await mermaid.render(id, source);
+        diagram.innerHTML = svg;
+      } catch (error) {
+        frame.hidden = false;
+        diagram.classList.add('mermaid-diagram--error');
+        diagram.textContent =
+          error instanceof Error ? `Mermaid failed to render:\n${error.message}` : 'Mermaid failed to render.';
+      }
+    }
+  };
+
+  const viewer = document.querySelector('[data-guide-image-viewer]');
+  const viewport = viewer?.querySelector('[data-guide-image-viewport]');
+  const viewerImage = viewer?.querySelector('[data-guide-image-element]');
+
+  void renderMermaidDiagrams();
+  document.addEventListener('astro:page-load', () => {
+    void renderMermaidDiagrams();
+  });
+
+  if (viewer instanceof HTMLElement && viewport instanceof HTMLElement && viewerImage instanceof HTMLImageElement) {
+    let isOpen = false;
+    let scale = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+    let dragPointerId = null;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let startOffsetX = 0;
+    let startOffsetY = 0;
+    let didDrag = false;
+    let restoreBodyOverflow = '';
+
+    const minScale = 0.5;
+    const maxScale = 6;
+
+    const clampScale = (value) => Math.min(maxScale, Math.max(minScale, value));
+
+    const updateTransform = () => {
+      viewerImage.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px)) scale(${scale})`;
+    };
+
+    const zoomAtPoint = (nextScale, clientX, clientY) => {
+      const clampedScale = clampScale(nextScale);
+      if (clampedScale === scale) return;
+
+      const centerX = window.innerWidth / 2 + offsetX;
+      const centerY = window.innerHeight / 2 + offsetY;
+      const ratio = clampedScale / scale;
+
+      offsetX = clientX - (clientX - centerX) * ratio - window.innerWidth / 2;
+      offsetY = clientY - (clientY - centerY) * ratio - window.innerHeight / 2;
+      scale = clampedScale;
+      updateTransform();
+    };
+
+    const openViewer = (sourceImage) => {
+      viewerImage.src = sourceImage.currentSrc || sourceImage.src;
+      viewerImage.alt = sourceImage.alt || '';
+      scale = 1;
+      offsetX = 0;
+      offsetY = 0;
+      didDrag = false;
+      updateTransform();
+      viewer.hidden = false;
+      restoreBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      isOpen = true;
+    };
+
+    const closeViewer = () => {
+      if (!isOpen) return;
+      viewer.hidden = true;
+      viewerImage.removeAttribute('src');
+      document.body.style.overflow = restoreBodyOverflow;
+      viewport.classList.remove('is-dragging');
+      dragPointerId = null;
+      didDrag = false;
+      isOpen = false;
+    };
+
+    const guideImages = Array.from(document.querySelectorAll('.sl-markdown-content img')).filter((image) => {
+      if (!(image instanceof HTMLImageElement)) return false;
+      if (image.closest('.not-content')) return false;
+      return image.style.display !== 'inline-block';
+    });
+
+    for (const image of guideImages) {
+      image.addEventListener('click', () => openViewer(image));
+    }
+
+    viewport.addEventListener('click', (event) => {
+      if (didDrag) {
+        didDrag = false;
+        return;
+      }
+      if (event.target === viewport && dragPointerId === null) {
+        closeViewer();
+      }
+    });
+
+    viewer.querySelector('[data-guide-image-action="close"]')?.addEventListener('click', closeViewer);
+    viewer.querySelector('[data-guide-image-action="zoom-in"]')?.addEventListener('click', () => {
+      zoomAtPoint(scale * 1.2, window.innerWidth / 2, window.innerHeight / 2);
+    });
+    viewer.querySelector('[data-guide-image-action="zoom-out"]')?.addEventListener('click', () => {
+      zoomAtPoint(scale / 1.2, window.innerWidth / 2, window.innerHeight / 2);
+    });
+
+    viewport.addEventListener(
+      'wheel',
+      (event) => {
+        if (!isOpen) return;
+        event.preventDefault();
+        const delta = event.deltaY < 0 ? 1.12 : 1 / 1.12;
+        zoomAtPoint(scale * delta, event.clientX, event.clientY);
+      },
+      { passive: false }
+    );
+
+    viewport.addEventListener('pointerdown', (event) => {
+      if (!isOpen) return;
+      dragPointerId = event.pointerId;
+      dragStartX = event.clientX;
+      dragStartY = event.clientY;
+      startOffsetX = offsetX;
+      startOffsetY = offsetY;
+      didDrag = false;
+      viewport.classList.add('is-dragging');
+      viewport.setPointerCapture(event.pointerId);
+    });
+
+    viewport.addEventListener('pointermove', (event) => {
+      if (!isOpen || dragPointerId !== event.pointerId) return;
+      if (Math.abs(event.clientX - dragStartX) > 3 || Math.abs(event.clientY - dragStartY) > 3) {
+        didDrag = true;
+      }
+      offsetX = startOffsetX + (event.clientX - dragStartX);
+      offsetY = startOffsetY + (event.clientY - dragStartY);
+      updateTransform();
+    });
+
+    const stopDragging = (event) => {
+      if (dragPointerId !== event.pointerId) return;
+      viewport.classList.remove('is-dragging');
+      if (viewport.hasPointerCapture(event.pointerId)) {
+        viewport.releasePointerCapture(event.pointerId);
+      }
+      dragPointerId = null;
+    };
+
+    viewport.addEventListener('pointerup', stopDragging);
+    viewport.addEventListener('pointercancel', stopDragging);
+
+    document.addEventListener('keydown', (event) => {
+      if (!isOpen) return;
+      if (event.key === 'Escape') closeViewer();
+      if (event.key === '+' || event.key === '=') {
+        zoomAtPoint(scale * 1.2, window.innerWidth / 2, window.innerHeight / 2);
+      }
+      if (event.key === '-') {
+        zoomAtPoint(scale / 1.2, window.innerWidth / 2, window.innerHeight / 2);
+      }
+    });
+  }
+</script>

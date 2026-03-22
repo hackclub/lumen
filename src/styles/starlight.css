@@ -1,0 +1,199 @@
+@import "@fontsource/source-serif-4/400.css";
+@import "@fontsource/source-serif-4/600.css";
+@import "@fontsource/source-serif-4/700.css";
+
+:root {
+  --guide-serif: "Source Serif 4", Georgia, Cambria, "Times New Roman", serif;
+  --sl-color-accent-low: #22131e;
+  --sl-color-accent: #e95b5f;
+  --sl-color-accent-high: #ffd0bc;
+  --sl-color-bg: #0d0a10;
+  --sl-color-bg-nav: #120d15;
+  --sl-color-bg-sidebar: #140f18;
+  --sl-color-gray-6: #1d1522;
+  --sl-color-text: #e8ddcf;
+  --sl-color-white: #fff7ef;
+  --sl-content-width: 45vw;
+}
+
+html {
+  background:
+    radial-gradient(circle at top, rgba(233, 91, 95, 0.08), transparent 30%),
+    linear-gradient(180deg, #0d0a10 0%, #130e17 100%);
+}
+
+body {
+  color: var(--sl-color-text);
+}
+
+.site-title {
+  letter-spacing: 0.04em;
+}
+
+.title-wrapper a,
+.guide-page-sidebar,
+.sl-markdown-content code,
+.sl-markdown-content pre {
+  font-family: var(--sl-font-system);
+}
+
+.content-panel:first-of-type {
+  padding: 0;
+}
+
+.content-panel:first-of-type .sl-container {
+  max-width: none;
+}
+
+.content-panel:first-of-type .sl-container > * {
+  margin-top: 0;
+}
+
+.content-panel:nth-of-type(2) {
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+  padding-inline: clamp(0.875rem, 3vw, 2.5rem);
+}
+
+.sl-markdown-content {
+  color: #f2e7d9;
+  font-family: var(--guide-serif);
+  font-size: 1.12rem;
+  line-height: 1.82;
+}
+
+.sl-markdown-content > :where(p, ul, ol) {
+  text-wrap: pretty;
+}
+
+.sl-markdown-content > * {
+  max-width: none;
+  margin-inline: 0;
+}
+
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+.sl-markdown-content h4 {
+  color: #fff7ef;
+  font-family: var(--guide-serif);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.sl-markdown-content h2 {
+  margin-top: 4.5rem;
+  padding-top: 2.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.sl-markdown-content h3 {
+  margin-top: 2rem;
+  font-size: 1.65rem;
+}
+
+.sl-markdown-content h4 {
+  margin-top: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.sl-markdown-content a {
+  color: #ffd0bc;
+}
+
+.sl-markdown-content hr {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.sl-markdown-content :not(pre) > code,
+.sl-markdown-content li code,
+.sl-markdown-content p code,
+.sl-markdown-content td code,
+.sl-markdown-content blockquote code {
+  padding: 0.2em 0.5em;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.55rem;
+  background: rgba(255, 255, 255, 0.06);
+  font-family: "SFMono-Regular", "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+  font-size: 0.95em;
+  line-height: 1;
+  color: #fff3e7;
+}
+
+.sl-markdown-content .expressive-code {
+  margin-block: 1.75rem;
+}
+
+.sl-markdown-content .expressive-code pre,
+.sl-markdown-content .expressive-code code,
+.sl-markdown-content .expressive-code .frame,
+.sl-markdown-content .expressive-code .copy button {
+  font-family: "SFMono-Regular", "Cascadia Code", "Fira Code", "JetBrains Mono", Consolas, monospace;
+}
+
+.sl-markdown-content .expressive-code .frame {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+    rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+.sl-markdown-content .expressive-code .frame pre {
+  border-radius: 0.9rem;
+}
+
+.sl-markdown-content .expressive-code .frame.has-title .header,
+.sl-markdown-content .expressive-code .frame.is-terminal .header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sl-markdown-content .expressive-code .frame.has-title .title,
+.sl-markdown-content .expressive-code .frame.is-terminal .header::before,
+.sl-markdown-content .expressive-code .copy button {
+  border-radius: 0.7rem;
+}
+
+@media (max-width: 50rem) {
+  .content-panel:nth-of-type(2) {
+    padding-top: 1.5rem;
+    padding-bottom: 3rem;
+    padding-inline: 0.875rem;
+  }
+
+  .sl-markdown-content {
+    font-size: 1.04rem;
+    line-height: 1.75;
+  }
+}
+
+.pagination-links a {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+    rgba(255, 255, 255, 0.015);
+  color: #fff7ef;
+  box-shadow: none;
+  transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.pagination-links a:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 208, 188, 0.32);
+  background-color: rgba(255, 255, 255, 0.045);
+}
+
+.pagination-links a > span {
+  font-family: var(--guide-serif);
+}
+
+.pagination-links .link-title {
+  color: #fff7ef;
+  font-family: var(--guide-serif);
+  font-size: 1.35rem;
+  line-height: 1.05;
+}
