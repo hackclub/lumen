@@ -33,7 +33,7 @@ const totalChars = text.replace(/\s+/g, '').length;
       {word.map(({ char, index }) => (
         <span class="bobbing-text__letter-wrap" style={`--i: ${index}`}>
           <span
-            class="bobbing-text__letter"
+            class="bobbing-text__letter initial"
             data-text={char}
             style={`--i: ${index}; --total: ${totalChars}`}
           >
@@ -47,20 +47,11 @@ const totalChars = text.replace(/\s+/g, '').length;
 
 {
   <script is:inline>
-    const startBobbingTextAnimations = () => {
       document.querySelectorAll('[data-bobbing-text]').forEach((root) => {
         if (!(root instanceof HTMLElement)) return;
 
-        root.querySelectorAll('.bobbing-text__letter-wrap').forEach((wrap) => {
-          if (wrap instanceof HTMLElement) {
-            wrap.style.animationPlayState = 'running';
-          }
-        });
-
         root.querySelectorAll('.bobbing-text__letter').forEach((letter) => {
           if (!(letter instanceof HTMLElement)) return;
-
-          letter.style.animationPlayState = 'running';
 
           if (root.dataset.interactive !== 'true' || letter.dataset.bound === 'true') return;
           letter.dataset.bound = 'true';
@@ -75,16 +66,12 @@ const totalChars = text.replace(/\s+/g, '').length;
             if (letter.classList.contains('is-popping')) {
               letter.classList.remove('is-popping');
             }
+            if (letter.classList.contains('initial')) {
+              letter.classList.remove('initial');
+            }
           });
         });
       });
-    };
-
-    if (document.readyState === 'complete') {
-      startBobbingTextAnimations();
-    } else {
-      window.addEventListener('load', startBobbingTextAnimations, { once: true });
-    }
   </script>
 }
 
@@ -114,7 +101,6 @@ const totalChars = text.replace(/\s+/g, '').length;
     display: inline-flex;
     margin: 0 1px;
     animation: bobbing-text-bob 2.5s steps(1) var(--bob-delay) infinite;
-    animation-play-state: paused;
   }
 
   .bobbing-text__letter {
@@ -126,10 +112,12 @@ const totalChars = text.replace(/\s+/g, '').length;
     -webkit-text-stroke: 8px black;
     -webkit-text-fill-color: black;
     paint-order: stroke fill;
-    transform: scale(0);
-    animation: bobbing-text-pop 0.3s steps(6) var(--pop-delay) forwards;
-    animation-play-state: paused;
   }
+
+    .bobbing-text__letter.initial {
+      transform: scale(0);
+      animation: bobbing-text-pop 0.3s steps(6) var(--pop-delay) forwards;
+    }
 
   .bobbing-text__letter.is-popping {
     animation: bobbing-text-pop-click 0.3s steps(6) forwards;
@@ -146,7 +134,7 @@ const totalChars = text.replace(/\s+/g, '').length;
     z-index: 1;
     -webkit-text-stroke: 0;
     background: linear-gradient(to right, #ea5b5b, #ea5b8f);
-    background-size: calc(var(--total) * 1ch) 100%;
+    background-size: calc(var(--total) * 1.5ch) 100%;
     background-position: calc(var(--i) * -1ch) 0;
     -webkit-background-clip: text;
     background-clip: text;
