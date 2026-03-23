@@ -1,6 +1,8 @@
 # Lumen
 This is the website for **Lumen** - a YSWS where you ship a Minecraft shaderpack, and get GPUs and Minecraft itself! Check it out [here](https://lumen.hackcraft.hackclub.com)!
 
+<img src="./public/img/opengraph-banner.png">
+
 You can find raw guide MDX files in [`/src/content/docs/guides`](/src/content/docs/guides).
 
 ## Building
