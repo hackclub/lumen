@@ -8,9 +8,12 @@
 	let rafId: number;
 	let lastSeekTime = 0;
 	let initialSyncRafId = 0;
+	let seekableObjectUrl: string | null = null;
 
 	const LERP_FACTOR = 0.3;
 	const FIREFOX_SEEK_INTERVAL = 17;
+	const DEFAULT_VIDEO_SRC = '/video/lumen-bg.mp4';
+	const SEEKABLE_VIDEO_SRC = '/video/lumen-bg-seekable.mp4';
 
 	function lerp(start: number, end: number, factor: number): number {
 		return start + (end - start) * factor;
@@ -40,21 +43,40 @@
 		});
 	}
 
-	async function forceFullBuffer(video: HTMLVideoElement) {
-		// Fetch the entire video as a blob so it's fully in memory
-		const res = await fetch(video.src);
-		const blob = await res.blob();
-		const objectUrl = URL.createObjectURL(blob);
-		video.src = objectUrl;
+	function markReady() {
+		ready = true;
+		syncVideoToScroll(true);
+		queueInitialScrollSync();
+	}
+
+	async function waitForMetadata(video: HTMLVideoElement) {
+		if (video.readyState >= HTMLMediaElement.HAVE_METADATA) return;
 
 		await new Promise<void>((resolve) => {
 			video.addEventListener('loadedmetadata', () => resolve(), { once: true });
 		});
+	}
 
-		video.currentTime = 0;
-		ready = true;
-		syncVideoToScroll(true);
-		queueInitialScrollSync();
+	async function loadSeekableVideo(video: HTMLVideoElement, signal: AbortSignal) {
+		// Keep the lightweight default source attached to the element while the seekable video buffers in the background.
+		const res = await fetch(SEEKABLE_VIDEO_SRC, { signal });
+		const blob = await res.blob();
+		const objectUrl = URL.createObjectURL(blob);
+
+		if (signal.aborted) {
+			URL.revokeObjectURL(objectUrl);
+			return;
+		}
+
+		seekableObjectUrl = objectUrl;
+		video.src = objectUrl;
+		video.load();
+
+		await waitForMetadata(video);
+
+		if (signal.aborted) return;
+
+		markReady();
 	}
 
 	function handleScroll() {
@@ -85,7 +107,18 @@
 	}
 
 	onMount(() => {
-		forceFullBuffer(videoEl);
+		const controller = new AbortController();
+
+		void waitForMetadata(videoEl).then(() => {
+			if (!controller.signal.aborted) {
+				markReady();
+			}
+		});
+
+		void loadSeekableVideo(videoEl, controller.signal).catch((error) => {
+			if (error instanceof DOMException && error.name === 'AbortError') return;
+			console.error('Failed to load seekable background video', error);
+		});
 
 		window.addEventListener('scroll', handleScroll, { passive: true });
 		window.addEventListener('load', queueInitialScrollSync);
@@ -93,11 +126,15 @@
 		rafId = requestAnimationFrame(animate);
 
 		return () => {
+			controller.abort();
 			window.removeEventListener('scroll', handleScroll);
 			window.removeEventListener('load', queueInitialScrollSync);
 			window.removeEventListener('pageshow', queueInitialScrollSync);
 			cancelAnimationFrame(rafId);
 			cancelAnimationFrame(initialSyncRafId);
+			if (seekableObjectUrl) {
+				URL.revokeObjectURL(seekableObjectUrl);
+			}
 		};
 	});
 </script>
@@ -107,7 +144,7 @@
 >
 	<video
 		bind:this={videoEl}
-		src="/video/lumen-bg-seekable.mp4"
+		src={DEFAULT_VIDEO_SRC}
 		poster="/video/lumen-bg-poster.webp"
 		muted
 		playsinline
