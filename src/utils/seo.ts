@@ -11,8 +11,7 @@ const WHITESPACE_RE = /\s+/g;
 export const SITE_TITLE = 'Hack Club Lumen';
 export const GUIDE_SITE_TITLE = 'Lumen Guides';
 export const HOMEPAGE_TITLE = 'Hack Club Lumen';
-export const HOMEPAGE_DESCRIPTION =
-  'Hack Club Lumen teaches you how to build Minecraft shaderpacks with step-by-step guides, community support, and prizes for submitted work.';
+export const HOMEPAGE_DESCRIPTION = 'Make Minecraft shaders, get Minecraft and GPUs for free! Comes with a guide.';
 export const OG_BANNER_PATH = '/img/opengraph-banner.png';
 
 function normalizePathname(pathname: string) {
