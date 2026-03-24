@@ -29,6 +29,12 @@ body {
 	font-family: "Minecraft", monospace;
 }
 
+.loading * {
+    animation: none !important;
+    transition: none !important;
+	animation-play-state: paused!important;
+}
+
 .sr-only {
 	position: absolute;
 	width: 1px;
@@ -59,7 +65,6 @@ body {
 	display: inline-flex;
 	margin: 0 1px;
 	animation: title-bob 2.5s steps(1) var(--bob-delay) infinite;
-	animation-play-state: paused;
 }
 
 @keyframes title-bob {
@@ -102,7 +107,6 @@ body {
 	transform: scale(0);
 	--pop-delay: calc(var(--i) * 0.01s);
 	animation: logo-pop 0.3s steps(6) var(--pop-delay) forwards;
-	animation-play-state: paused;
 }
 
 .title-letter::after {
@@ -273,7 +277,6 @@ body {
 .button-pop-wrap {
 	transform: scale(0);
 	animation: logo-pop 0.3s steps(6) var(--button-pop-delay, 0.25s) forwards;
-	animation-play-state: paused;
 }
 
 .button-pop {

@@ -1,6 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
-
   export let href = '#';
   export let bob = false;
   export let popDelay = 0.25;
@@ -9,12 +7,6 @@
 
   let wrap;
   $: isExternal = /^(?:[a-z]+:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:');
-
-  onMount(() => {
-    if (wrap) {
-      wrap.style.animationPlayState = 'running';
-    }
-  });
 </script>
 
 <div
@@ -67,7 +59,6 @@
     justify-content: center;
     transform: scale(0);
     animation: logo-pop 0.3s steps(6) var(--button-pop-delay, 0.25s) forwards;
-    animation-play-state: paused;
   }
 
   .button-pop {
