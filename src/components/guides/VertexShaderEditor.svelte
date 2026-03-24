@@ -13,6 +13,7 @@
     getPreviewRenderSize,
     previewTransitionMs
   } from './shader-editor-preview';
+  import { loadMonaco } from './load-monaco';
 
   type Vec3 = [number, number, number];
   type PreparedMesh = {
@@ -866,7 +867,7 @@ void main() {
     const setup = async () => {
       if (!canvas || !editorHost) return;
 
-      const monacoModule = await import('monaco-editor');
+      const monacoModule = await loadMonaco();
       monaco = monacoModule;
       registerGlslLanguage(monacoModule);
 

@@ -13,6 +13,7 @@
     getPreviewRenderSize,
     previewTransitionMs
   } from './shader-editor-preview';
+  import { loadMonaco } from './load-monaco';
 
   const defaultFragmentShader = `void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec2 uv = fragCoord / iResolution.xy;
@@ -368,7 +369,7 @@ void main() {
     const setup = async () => {
       if (!canvas || !editorHost) return;
 
-      const monacoModule = await import('monaco-editor');
+      const monacoModule = await loadMonaco();
       monaco = monacoModule;
       registerGlslLanguage(monacoModule);
 
