@@ -22,12 +22,22 @@ const {
   {
     [1, 2, 3, 4, 5].map((i) => (
       <span class:list={['lumen-logo__letter-wrap', { 'lumen-logo__letter-wrap--first': i === 1 }]} style={`--i: ${i - 1}`}>
-        <img
+
+        {variant == "guide"? <a
+            href="/"
+            aria-label="Home"
+        >
+          <img
+            src={`/img/letter${i}.png`}
+            alt={i === 1 ? 'Lumen' : ''}
+            class="lumen-logo__letter initial"
+            draggable="false"
+        /></a> : <img
           src={`/img/letter${i}.png`}
           alt={i === 1 ? 'Lumen' : ''}
-          class="lumen-logo__letter"
+          class="lumen-logo__letter initial"
           draggable="false"
-        />
+      />}
 
         {
           i === 1 && showHackclubBadge && (
@@ -72,6 +82,9 @@ const {
             if (letter.classList.contains('is-popping')) {
               letter.classList.remove('is-popping');
             }
+            if (letter.classList.contains('initial')) {
+              letter.classList.remove('initial');
+            }
           });
         });
       });
@@ -85,6 +98,7 @@ const {
     align-items: flex-end;
     justify-content: center;
     flex-wrap: nowrap;
+    user-select: none;
   }
 
   .lumen-logo__letter-wrap {
@@ -96,11 +110,14 @@ const {
   }
 
   .lumen-logo__letter {
-    --pop-delay: calc(var(--i) * 0.08s);
     width: auto;
-    transform: scale(0);
     image-rendering: pixelated;
     filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.35));
+  }
+
+  .lumen-logo__letter.initial {
+    --pop-delay: calc(var(--i) * 0.08s);
+    transform: scale(0);
     animation: logo-pop 0.3s ease-out var(--pop-delay) forwards;
   }
 

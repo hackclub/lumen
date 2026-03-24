@@ -141,10 +141,6 @@ body {
   overflow: hidden;
 }
 
-.sl-markdown-content .expressive-code .frame pre {
-  border-radius: 0.9rem;
-}
-
 .sl-markdown-content .expressive-code .frame.has-title .header,
 .sl-markdown-content .expressive-code .frame.is-terminal .header {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);

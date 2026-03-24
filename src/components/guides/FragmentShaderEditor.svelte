@@ -627,9 +627,9 @@ void main() {
     word-break: break-word;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 80rem) {
     .fragment-shader-editor {
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr!important;
     }
 
     .fragment-shader-editor__editor,
