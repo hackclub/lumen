@@ -7,20 +7,18 @@
   let cls = '';
   export { cls as class };
 
-  let wrap;
+  let mounted = false;
   $: isExternal = /^(?:[a-z]+:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:');
 
   onMount(() => {
-    if (wrap) {
-      wrap.style.animationPlayState = 'running';
-    }
+    mounted = true;
   });
 </script>
 
 <!-- Keep a guide-only copy so docs pages do not inherit the homepage CSS bundle. -->
 <div
   class="button-pop-wrap not-content"
-  bind:this={wrap}
+  class:mounted
   style={`--button-pop-delay: ${popDelay}s;`}
 >
   <a
@@ -66,9 +64,11 @@
   .button-pop-wrap {
     display: flex;
     justify-content: center;
+  }
+
+  .button-pop-wrap.mounted {
     transform: scale(0);
     animation: logo-pop 0.3s steps(6) var(--button-pop-delay, 0.25s) forwards;
-    animation-play-state: paused;
   }
 
   .button-pop {
