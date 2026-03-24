@@ -47,7 +47,7 @@ const totalChars = text.replace(/\s+/g, '').length;
 
 {
   <script is:inline>
-    const startBobbingTextAnimations = () => {
+    window.__lumenStartBobbingTextAnimations ??= () => {
       document.querySelectorAll('[data-bobbing-text]').forEach((root) => {
         if (!(root instanceof HTMLElement)) return;
 
@@ -81,9 +81,12 @@ const totalChars = text.replace(/\s+/g, '').length;
     };
 
     if (document.readyState === 'complete') {
-      startBobbingTextAnimations();
-    } else {
-      window.addEventListener('load', startBobbingTextAnimations, { once: true });
+      window.__lumenStartBobbingTextAnimations();
+    } else if (!window.__lumenBobbingTextAnimationsLoadBound) {
+      window.__lumenBobbingTextAnimationsLoadBound = true;
+      window.addEventListener('load', () => {
+        window.__lumenStartBobbingTextAnimations();
+      }, { once: true });
     }
   </script>
 }
