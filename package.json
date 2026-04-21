@@ -18,7 +18,7 @@
     "@bithero/monaco-glsl": "^1.1.0",
     "@fontsource/source-serif-4": "^5.2.9",
     "@tailwindcss/vite": "^4.2.1",
-    "astro": "^6.0.8",
+    "astro": "^6.1.8",
     "dedent": "^1.7.2",
     "mermaid": "^11.13.0",
     "monaco-editor": "^0.55.1",
