@@ -109,7 +109,7 @@ const structuredData = {
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   </head>
 
-  <body>
+  <body class="loading">
     <ScrollVideo client:only="svelte" />
 
     <main class="relative">
@@ -137,7 +137,7 @@ const structuredData = {
         <div class="max-w-6xl text-center text-white">
           <h2 class="section-title" data-text="What's Lumen...?">What's Lumen...?</h2>
           <p class="mt-6 leading-relaxed text-[#E95B5F] text-3xl minecraft-text">
-            Lumen is a Hack Club YSWS where you ship a shaderpack, and get Minecraft! The authors of the best shaderpacks can get any GPU up to an RTX 5060 Ti (or equivalent). 
+            Lumen is a Hack Club YSWS where you ship a shaderpack, and get Minecraft! The authors of the best shaderpacks can get any GPU up to an RTX 5060 Ti (or equivalent).
           </p>
         </div>
       </section>
@@ -217,10 +217,8 @@ const structuredData = {
     </main>
 
     <script>
-      const buttonPopWrap = document.querySelector<HTMLElement>(".button-pop-wrap");
-
       window.addEventListener("load", () => {
-        if (buttonPopWrap) buttonPopWrap.style.animationPlayState = "running";
+        document.body.classList.remove("loading");
       });
 
       // Lighting setup
