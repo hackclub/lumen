@@ -22,7 +22,7 @@
     "dedent": "^1.7.2",
     "mermaid": "^11.13.0",
     "monaco-editor": "^0.55.1",
-    "svelte": "^5.53.13",
+    "svelte": "^5.55.7",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
   }
